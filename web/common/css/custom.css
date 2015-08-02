@@ -1,0 +1,96 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Aug 2, 2015, 12:48:54 PM
+    Author     : nguyen
+*/
+#button-save{
+
+}
+#my-name{
+    font-size: 19px;
+    font-weight: bold;
+}
+#my-type{
+    color:orangered;
+    padding-left: 3px;
+}
+#button-save{
+    text-align: left;
+    padding-top: 2px;
+}
+#custom-add{
+    color:blue;
+}
+a{
+    text-decoration: none;
+    color:black
+}
+h4{
+    color: gray;
+}
+.item{
+    position: absolute;
+    top: 0;
+    right: 2px;
+    border: 1px solid #ddd;
+    width: 200px;
+    height: auto;
+    background-color: #FBFBCC;
+    padding: 5px;
+    text-align: center;
+}
+.list-word{
+    position: relative
+}
+.avc-title{
+    text-align: center;
+    font-size: 25px;
+    border-bottom: 1px solid;
+}
+.avc-span{    
+    display: inline-block;
+    padding: 10px;}
+.avc-header{
+    display:block;
+}
+
+.avc-panel{
+    //position: absolute;
+}
+.avc-content{
+    position: relative;
+    float: none;
+    border-top: 1px solid #ddd;
+    padding: 5px 10px;
+
+}
+.avc-albums{
+    width: 30%
+}
+.search-content{
+    margin-top: 10px;
+    display:inline-block;
+}
+.result-content{
+    text-align: left;
+    border-bottom: 1px solid;
+    display: inline-block;
+    padding: 4px;
+    width: 40%;
+}
+
+.search-title{
+    font-size: 15px;
+    padding-bottom: 2px;
+}
+.search-custom{
+    padding: 2px 0px;
+    font-size: 14px;
+}
+.active{
+    font-weight: bold
+}

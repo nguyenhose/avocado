@@ -5,11 +5,15 @@
  */
 package com.collection;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author nguyen
  */
-public class Words {
+@XmlRootElement
+public class Word {
   private  String name;
   private  String definition;
   private  String origin;
@@ -17,10 +21,13 @@ public class Words {
   private  String id;
   private String type;
 
+    public Word() {
+    }
+    
     public String getType() {
         return type;
     }
-
+    @XmlElement
     public void setType(String type) {
         this.type = type;
     }
@@ -28,15 +35,15 @@ public class Words {
     public String getName() {
         return name;
     }
-
+    @XmlElement
     public void setName(String name) {
         this.name = name;
     }
-
+    
     public String getDefinition() {
         return definition;
     }
-
+    @XmlElement
     public void setDefinition(String definition) {
         this.definition = definition;
     }
