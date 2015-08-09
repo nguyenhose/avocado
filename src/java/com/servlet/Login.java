@@ -5,28 +5,21 @@
  */
 package com.servlet;
 
-import com.collection.Album;
-import com.collection.Word;
-import com.util.AlbumManager;
-import java.io.File;
+import com.util.MongoConnection;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.jdom2.JDOMException;
 
 /**
  *
  * @author nguyen
  */
-@WebServlet(name = "ViewAlbums", urlPatterns = {"/ViewAlbums"})
-public class ViewAlbums extends HttpServlet {
+@WebServlet(name = "Login", urlPatterns = {"/Login"})
+public class Login extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -45,10 +38,10 @@ public class ViewAlbums extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ViewAlbums</title>");
+            out.println("<title>Servlet Login</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ViewAlbums at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet Login at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -66,39 +59,7 @@ public class ViewAlbums extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            String userId = request.getParameter("userId");
-            String mode = request.getParameter("mode");
-            AlbumManager am = new AlbumManager();
-            File f = new File(SaveToAlbum.fileUrl);
-            if (f.exists() && !f.isDirectory()) {
-                List<Album> lw = am.selectAlbums(f, userId);
-                String data = "";
-                if ("dropdown".equals(mode)) {
-                    for (Album temp : lw) {
-                        data = "<option value='" + temp.getName() + "'>" + temp.getName() + "</option>"
-                                + data;
-                    }
-                    data = "<button onclick='showDropdown()' id='avc-add-select'> Add To </button>\n"
-                            + "<select id='avc-dropdown'  onclick=\"addToAlbum()\">"
-                            + data
-                            + "<option value='new-album'>New album..</option>\n"
-                            + "</select>";
-                } else {
-                    for (Album temp : lw) {
-                        data = "<div class='avc-album-item'>"
-                                + "<div class='avc-word-key' id='" + temp.getName() + "' onclick=\"getListWord('" + temp.getName() + "')\">" + temp.getName() + "</div>"
-                                + "</div>" + data;
-                    }
-                }
-
-                response.setContentType("text/plain");
-                response.setCharacterEncoding("UTF-8");
-                response.getWriter().write(data);
-            }
-        } catch (JDOMException ex) {
-            Logger.getLogger(ViewAlbums.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -112,7 +73,12 @@ public class ViewAlbums extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String userName = request.getParameter("userName");
+        String password = request.getParameter("password");
+        if(!userName.isEmpty() && !password.isEmpty()){
+        //checkExist
+            MongoConnection.getConnection();
+        }
     }
 
     /**

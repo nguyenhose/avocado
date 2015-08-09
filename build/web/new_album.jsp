@@ -11,7 +11,7 @@
     <button onclick="ajaxRequest()">Find</button>
     <div class="search-custom">or you can <a id="custom-add" href="#"> custom add</a>.</div>
 </div>
-<div class='result-content'>
+<div id='result-content' class='result-content' style='display:none'>
     <div id="result" style="display:none">
 
     </div>

@@ -44,7 +44,7 @@ public class ViewAlbum extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ViewAlbum</title>");            
+            out.println("<title>Servlet ViewAlbum</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet ViewAlbum at " + request.getContextPath() + "</h1>");
@@ -67,19 +67,23 @@ public class ViewAlbum extends HttpServlet {
             throws ServletException, IOException {
         try {
             //processRequest(request, response);
-            String album =  request.getParameter("album");
+            String album = request.getParameter("album");
             AlbumManager am = new AlbumManager();
             File f = new File(SaveToAlbum.fileUrl);
             List<Word> lw = am.selectAlbum(f, "2", album);
             String data = "";
-            for (Word temp: lw){
-                      data = "<div class='avc-word-item'>"
-                        +"<div onclick=\"toggleImage('"+temp.getName()+"')\">"+temp.getName()+"</div>"
-                        +"<div id='"+temp.getName()+"' class='item' style='display:none'>"
-                        +"<div>"+temp.getType()+"</div>"
-                        +"<div>"+temp.getDefinition()+"</div>"
-                        +"</div>"
-                        + "</div>"+data;
+            if (!lw.isEmpty()) {
+                for (Word temp : lw) {
+                    data = "<div class='avc-word-item'>"
+                            + "<div onclick=\"toggleImage('" + temp.getName() + "')\">" + temp.getName() + "</div>"
+                            + "<div id='" + temp.getName() + "' class='item' style='display:none'>"
+                            +"<h4>"+temp.getName()+"</h4>"
+                            + "<div id='my-type'>" + temp.getType() + "</div>"
+                            + "<div>" + temp.getDefinition() + "</div>"
+                            + "</div>"
+                            + "</div>" + data;
+                }
+                data="<h4>"+album+"</h4>"+data;
             }
             response.setContentType("text/plain");
             response.setCharacterEncoding("UTF-8");

@@ -9,7 +9,7 @@
 
     </div>
 </div>
-<div class="avc-list-word" id="list-words">
+<div class="avc-list-word" id="list-words" style="display:none">
     
 </div>
 

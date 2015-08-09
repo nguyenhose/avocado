@@ -21,13 +21,13 @@ and open the template in the editor.
         <div class="avc-title">Avocado</div>
         <div class="avc-header">
             <div class="avc-span" id="new-album-id">
-                <a href="#">New word</a>
+                <a href="#newword">New word</a>
             </div>
             <div class="avc-span" id="my-album-id">
-                <a href="#" >My Albums</a>
+                <a href="#album" >My Albums</a>
             </div>
             <div class="avc-span" id="library-id">
-                <a href="#" >Library</a>
+                <a href="#library" >Library</a>
             </div>
         </div>
         <div class="avc-content">

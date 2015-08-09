@@ -37,14 +37,20 @@ function ajaxRequest() {
     var xmlhttp;
     var name = document.getElementById("key_word").value;
     if (name !== "") {
+        document.getElementById("result-content").style.display = 'inline-block';
+        document.getElementById("result").style.display = 'block';
+        document.getElementById("result").innerHTML = 'Loading...';
         xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
             {
+
                 document.getElementById("result").innerHTML = xmlhttp.responseText;
-                document.getElementById("result").style.display = 'block';
                 document.getElementById("button-save").style.display = 'block';
                 document.getElementById("message").style.display = 'none';
+                if ("Not Found." !== xmlhttp.responseText) {
+                    viewDropdown();
+                }
             }
         };
         xmlhttp.open("GET", "/avocado/CreateWord?word=" + name, true);
@@ -93,7 +99,7 @@ function saveToAlbum(albumName, status) {
         }
     }
     else {
-        alert('dont troll me!');
+        alert('Please input your word!');
     }
 }
 
@@ -103,12 +109,13 @@ function getListWord(id) {
     for (var i = 0; i < albumItems.length; i++) {
         albumItems[i].setAttribute("class", "avc-album-item");
     }
-    activeAlbum.setAttribute("class", "avc-album-item active");
+    activeAlbum.setAttribute("class", "avc-album-item album-active");
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
         {
             document.getElementById("list-words").innerHTML = xmlhttp.responseText;
+            document.getElementById("list-words").style.display = 'block';
         }
     };
     xmlhttp.open("GET", "/avocado/ViewAlbum?album=" + id, true);
@@ -120,7 +127,7 @@ function viewAlbums() {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
         {
             document.getElementById("list-album").innerHTML = xmlhttp.responseText;
-            viewDropdown();
+
         }
     };
     xmlhttp.open("GET", "/avocado/ViewAlbums?userId=2", true);
@@ -174,6 +181,12 @@ function toggleContent() {
     var myAlbum = document.getElementById('my-album');
     var newAlbum = document.getElementById('new-album');
     var library = document.getElementById('library');
+    //first init
+    newAlbum.style.display = 'block';
+    sideBar[0].setAttribute("class", "avc-span active");
+    myAlbum.style.display = 'none';
+    library.style.display = 'none';
+
     for (var i = 0; i < sideBar.length; i++) {
         sideBar[i].onclick = function () {
             if (this.className.indexOf("active") !== 1) {
@@ -186,6 +199,7 @@ function toggleContent() {
                 unfade(newAlbum);
                 fade(myAlbum);
                 fade(library);
+                viewDropdown();
             }
             if (this.id === "library-id") {
                 viewLibrary();
@@ -197,6 +211,7 @@ function toggleContent() {
                 unfade(myAlbum);
                 fade(newAlbum);
                 fade(library);
+                viewAlbums();
 
             }
         };

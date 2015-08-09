@@ -57,7 +57,7 @@ public class CreateWord extends HttpServlet {
                     + "<div id='my-type'>" + newWord.getType() + "</div>"
                     + "<div id='my-definition'>" + newWord.getDefinition() + "</div>";
         } else {
-            data = "<div>Not Found.</div>";
+            data = "Not Found.";
         }
         //get meaning from result
         response.setContentType("text/plain");

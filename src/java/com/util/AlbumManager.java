@@ -7,6 +7,7 @@ package com.util;
 
 import com.collection.Album;
 import com.collection.Word;
+import com.servlet.SaveToAlbum;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -88,6 +89,7 @@ public class AlbumManager {
             Element newAlbum = new Element("album");
             newAlbum.setAttribute("userId", id);
             newAlbum.setAttribute("name", album);
+            newAlbum.setAttribute("public","false");
             //add word
             Element myWord = new Element("word");
             myWord.addContent(new Element("definition").setText(word.getDefinition()));
@@ -99,7 +101,7 @@ public class AlbumManager {
             document.setContent(root);
             //send back to xml file
             try {
-                FileWriter writer = new FileWriter("/home/nguyen/Desktop/file.xml");
+                FileWriter writer = new FileWriter(SaveToAlbum.fileUrl);
                 XMLOutputter outputter = new XMLOutputter();
                 outputter.setFormat(Format.getPrettyFormat());
                 outputter.output(document, writer);
@@ -121,7 +123,7 @@ public class AlbumManager {
         XPathExpression<Element> xpath = selectElement(query, file);
         List<Element> listNode = xpath.evaluate(document);
         List<Word> listWord = new ArrayList<>();
-        if (!listWord.isEmpty()) {
+        if (!listNode.isEmpty()) {
             for (Element element : listNode) {
                 Word current = new Word();
                 current.setName(element.getChildTextTrim("name"));
