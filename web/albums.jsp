@@ -5,11 +5,11 @@
 --%>
 <div class="avc-albums">
     <h4>List albums</h4>
-    <div id="list-album" class="list-word">
+    <div id="list-album">
 
     </div>
 </div>
-<div class="avc-list-word">
+<div class="avc-list-word" id="list-words">
     
 </div>
 

@@ -21,8 +21,10 @@ import org.jsoup.nodes.Document;
  */
 @WebServlet(name = "CreateWord", urlPatterns = {"/CreateWord"})
 public class CreateWord extends HttpServlet {
-public String url = "http://www.oxforddictionaries.com/definition/english/";
-public String createUrl ="new_album.jsp";        
+
+    public String url = "http://www.oxforddictionaries.com/definition/english/";
+    public String createUrl = "new_album.jsp";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -32,8 +34,6 @@ public String createUrl ="new_album.jsp";
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -49,12 +49,17 @@ public String createUrl ="new_album.jsp";
         String word = request.getParameter("word");
         //Parse website url
         ParseHelper parser = new ParseHelper();
-        Document result = parser.getHtmlFromUrl(url+word);
+        String data;
+        Document result = parser.getHtmlFromUrl(url + word);
+        if (result != null) {
+            Word newWord = parser.getMeaning(result, word);
+            data = "<div id='my-name'>" + newWord.getName() + "</div>"
+                    + "<div id='my-type'>" + newWord.getType() + "</div>"
+                    + "<div id='my-definition'>" + newWord.getDefinition() + "</div>";
+        } else {
+            data = "<div>Not Found.</div>";
+        }
         //get meaning from result
-        Word newWord = parser.getMeaning(result, word);
-        String data =   "<div id='my-name'>"+newWord.getName()+"</div>"
-                        +"<div id='my-type'>"+newWord.getType()+"</div>"
-                        +"<div id='my-definition'>"+newWord.getDefinition()+"</div>";
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(data);

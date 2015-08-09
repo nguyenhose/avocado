@@ -70,10 +70,10 @@ public class ViewAlbum extends HttpServlet {
             String album =  request.getParameter("album");
             AlbumManager am = new AlbumManager();
             File f = new File(SaveToAlbum.fileUrl);
-            List<Word> lw = am.selectAlbum(f, album);
+            List<Word> lw = am.selectAlbum(f, "2", album);
             String data = "";
             for (Word temp: lw){
-                      data = "<div style='padding:2px;border-bottom:1px solid #ddd'>"
+                      data = "<div class='avc-word-item'>"
                         +"<div onclick=\"toggleImage('"+temp.getName()+"')\">"+temp.getName()+"</div>"
                         +"<div id='"+temp.getName()+"' class='item' style='display:none'>"
                         +"<div>"+temp.getType()+"</div>"

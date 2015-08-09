@@ -7,8 +7,8 @@ and open the template in the editor.
     Created on : Aug 2, 2015, 12:48:54 PM
     Author     : nguyen
 */
-#button-save{
-
+#avc-result{
+    position: relative;
 }
 #my-name{
     font-size: 19px;
@@ -19,11 +19,31 @@ and open the template in the editor.
     padding-left: 3px;
 }
 #button-save{
-    text-align: left;
-    padding-top: 2px;
+    position: absolute;
+    right: 100px;
+    top: 1px;
+}
+#message{
+    position: absolute;
+    right: 100px;
+    top: 1px;
 }
 #custom-add{
     color:blue;
+}
+#avc-add-button{
+    position: relative;
+}
+#avc-add-select{
+    position: absolute;
+    top:0px;
+    z-index: 9;
+    width: 100px;
+}
+#avc-dropdown{
+    width: 100px;
+    position: absolute;
+    top: 0px;
 }
 a{
     text-decoration: none;
@@ -34,14 +54,14 @@ h4{
 }
 .item{
     position: absolute;
-    top: 0;
     right: 2px;
-    border: 1px solid #ddd;
     width: 200px;
-    height: auto;
-    background-color: #FBFBCC;
-    padding: 5px;
-    text-align: center;
+    background-color: #FFFF00;
+    padding: 5px 0px;
+    bottom: 2px;
+    top: 2px;
+    margin-left: 202px; 
+    font-size: 20px;
 }
 .list-word{
     position: relative
@@ -56,6 +76,7 @@ h4{
     padding: 10px;}
 .avc-header{
     display:block;
+    
 }
 
 .avc-panel{
@@ -69,7 +90,28 @@ h4{
 
 }
 .avc-albums{
-    width: 30%
+    width: 200px;
+    position: absolute;
+    top: 0px;
+    bottom: 2px;
+    left: -4px;
+    background-color: whitesmoke;
+    border-right: 1px solid #C1C1C1;
+}
+.avc-list-word{
+    margin-left: 202px;
+    border: solid 1px;
+    padding: 10px;
+    width: 42%;
+    position: relative;
+}
+.avc-word-item{
+    padding: 3px 0px 3px;
+    background-color: whitesmoke;
+
+}
+.avc-word-item:nth-of-type(odd){
+    background-color: gray;
 }
 .search-content{
     margin-top: 10px;
@@ -77,10 +119,11 @@ h4{
 }
 .result-content{
     text-align: left;
-    border-bottom: 1px solid;
+    border: 1px solid;
     display: inline-block;
     padding: 4px;
     width: 40%;
+    position: relative;
 }
 
 .search-title{
@@ -94,3 +137,12 @@ h4{
 .active{
     font-weight: bold
 }
+.word-active{
+    font-size: 30px;
+    background-color: #FFFF00;
+}
+.avc-word-item:hover{
+    background-color: #ddd;
+}
+
+

@@ -23,7 +23,7 @@ and open the template in the editor.
             <div class="avc-span" id="new-album-id">
                 <a href="#">New word</a>
             </div>
-            <div class="avc-span active" id="my-album-id">
+            <div class="avc-span" id="my-album-id">
                 <a href="#" >My Albums</a>
             </div>
             <div class="avc-span" id="library-id">
@@ -37,7 +37,7 @@ and open the template in the editor.
             <div class="avc-panel" id="my-album">
                   <jsp:include page="albums.jsp"/>
             </div>
-            <div>
+            <div class="avc-panel" id="library">
                   <jsp:include page="library.jsp"/>
             </div>
         </div>

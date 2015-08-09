@@ -6,11 +6,11 @@
 package com.servlet;
 
 import com.collection.Album;
-import com.collection.Word;
 import com.util.AlbumManager;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,8 +25,8 @@ import org.jdom2.JDOMException;
  *
  * @author nguyen
  */
-@WebServlet(name = "ViewAlbums", urlPatterns = {"/ViewAlbums"})
-public class ViewAlbums extends HttpServlet {
+@WebServlet(name = "ViewLibrary", urlPatterns = {"/ViewLibrary"})
+public class ViewLibrary extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -45,10 +45,10 @@ public class ViewAlbums extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ViewAlbums</title>");
+            out.println("<title>Servlet ViewLibrary</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ViewAlbums at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ViewLibrary at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -68,36 +68,23 @@ public class ViewAlbums extends HttpServlet {
             throws ServletException, IOException {
         try {
             String userId = request.getParameter("userId");
-            String mode = request.getParameter("mode");
             AlbumManager am = new AlbumManager();
+            List<Album> publicAlbumList = new ArrayList<>();
             File f = new File(SaveToAlbum.fileUrl);
             if (f.exists() && !f.isDirectory()) {
-                List<Album> lw = am.selectAlbums(f, userId);
+                publicAlbumList = am.selectLibrary(f, userId);
                 String data = "";
-                if ("dropdown".equals(mode)) {
-                    for (Album temp : lw) {
-                        data = "<option value='" + temp.getName() + "'>" + temp.getName() + "</option>"
-                                + data;
-                    }
-                    data = "<button onclick='showDropdown()' id='avc-add-select'> Add To </button>\n"
-                            + "<select id='avc-dropdown'  onChange=\"addToAlbum()\">"
-                            + data
-                            + "<option value='new-album'>New album..</option>\n"
-                            + "</select>";
-                } else {
-                    for (Album temp : lw) {
-                        data = "<div class='avc-album-item'>"
-                                + "<div class='avc-word-key' id='" + temp.getName() + "' onclick=\"getListWord('" + temp.getName() + "')\">" + temp.getName() + "</div>"
-                                + "</div>" + data;
-                    }
-                }
 
+                for (Album al : publicAlbumList) {
+                    data = "<div class='library-item'>"
+                            + al.getName() + "</div>" + data;
+                }
                 response.setContentType("text/plain");
                 response.setCharacterEncoding("UTF-8");
                 response.getWriter().write(data);
             }
         } catch (JDOMException ex) {
-            Logger.getLogger(ViewAlbums.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ViewLibrary.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

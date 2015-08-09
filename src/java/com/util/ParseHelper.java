@@ -18,33 +18,40 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-
 /**
  *
  * @author nguyen
  */
 public class ParseHelper {
-    
-    public Document getHtmlFromUrl(String url) throws IOException{
-    Document doc = Jsoup.connect(url).get();
-    return doc;
+
+    public Document getHtmlFromUrl(String url) throws IOException {
+        Document doc = null;
+        try {
+            doc = Jsoup.connect(url).get();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return doc;
     }
-    public Word getMeaning(Document doc, String name) throws IOException{
-    Word word = new Word();
-  //  word.setDefinition(doc.);
-    Element keyWord = doc.getElementsByClass("pageTitle").get(0);
-    Element meaning = doc.getElementsByClass("sense").get(0);
-    Element definition = meaning.getElementsByClass("definition").get(0);
-    Element type = doc.getElementsByClass("partOfSpeech").get(0);
-    Element original = doc.getElementsByClass("etymology").get(0);
-    word.setName(keyWord.text());
-    word.setOrigin(original.text());
-    word.setDefinition(definition.text());
-    word.setType(type.text());
-    word.setName(name);
-    return word;
+
+    public Word getMeaning(Document doc, String name) throws IOException {
+        Word word = new Word();
+        //  word.setDefinition(doc.);
+        Element keyWord = doc.getElementsByClass("pageTitle").get(0);
+        Element meaning = doc.getElementsByClass("sense").get(0);
+        Element definition = meaning.getElementsByClass("definition").get(0);
+        Element type = doc.getElementsByClass("partOfSpeech").get(0);
+        Element original = doc.getElementsByClass("etymology").get(0);
+        word.setName(keyWord.text());
+        word.setOrigin(original.text());
+        word.setDefinition(definition.text());
+        word.setType(type.text());
+        word.setName(name);
+        return word;
     }
-    public boolean initalFile(Word word, File file){
+
+    public boolean initalFile(Word word, File file) {
         Albums albums = new Albums();
         Album myAlbum = new Album();
         List<Word> listWords = new ArrayList<>();
@@ -61,7 +68,7 @@ public class ParseHelper {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(Albums.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true);
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             jaxbMarshaller.marshal(albums, file);
             System.out.print("marshal start");
             jaxbMarshaller.marshal(albums, System.out);
@@ -70,5 +77,5 @@ public class ParseHelper {
         }
         return false;
     }
-    
+
 }

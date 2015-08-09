@@ -47,52 +47,114 @@ public class AlbumManager {
         return xpath;
     }
 
-    public boolean addWord(Word word, File file, String id)
+    public boolean addWord(Word word, File file, String id, String album)
             throws JDOMException, IOException {
-        String query = "//*[@userId= '2']";
+        String query = "//*[@userId= '2' and @name='" + album + "']";
         XPathExpression<Element> xpath = selectElement(query, file);
         Element targetAlbum = xpath.evaluateFirst(document);
-        //add word
-        Element myWord = new Element("word");
-        myWord.addContent(new Element("definition").setText(word.getDefinition()));
-        myWord.addContent(new Element("name").setText(word.getName()));
-        myWord.addContent(new Element("type").setText(word.getType()));
-   
-        targetAlbum.addContent(myWord);
-        document.setContent(root);
-        //send back to xml file
-        try {
-            FileWriter writer = new FileWriter("/home/nguyen/Desktop/file.xml");
-            XMLOutputter outputter = new XMLOutputter();
-            outputter.setFormat(Format.getPrettyFormat());
-            outputter.output(document, writer);
-            outputter.output(document, System.out);
-            writer.close(); // close writer
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (targetAlbum != null) {
+            //add word
+            Element myWord = new Element("word");
+            myWord.addContent(new Element("definition").setText(word.getDefinition()));
+            myWord.addContent(new Element("name").setText(word.getName()));
+            myWord.addContent(new Element("type").setText(word.getType()));
+
+            targetAlbum.addContent(myWord);
+            document.setContent(root);
+            //send back to xml file
+            try {
+                FileWriter writer = new FileWriter("/home/nguyen/Desktop/file.xml");
+                XMLOutputter outputter = new XMLOutputter();
+                outputter.setFormat(Format.getPrettyFormat());
+                outputter.output(document, writer);
+                outputter.output(document, System.out);
+                writer.close(); // close writer
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return false;
         }
         return false;
     }
 
-    public List<Word> selectAlbum(File file, String id)
+    public boolean addAlbum(Word word, File file, String id, String album)
             throws JDOMException, IOException {
-        String query = "//album[@userId= '2']/*";
+        String query = "/albums";
+        XPathExpression<Element> xpath = selectElement(query, file);
+        Element root = xpath.evaluateFirst(document);
+        if (root.isRootElement()) {
+            //add albums
+            Element newAlbum = new Element("album");
+            newAlbum.setAttribute("userId", id);
+            newAlbum.setAttribute("name", album);
+            //add word
+            Element myWord = new Element("word");
+            myWord.addContent(new Element("definition").setText(word.getDefinition()));
+            myWord.addContent(new Element("name").setText(word.getName()));
+            myWord.addContent(new Element("type").setText(word.getType()));
+
+            newAlbum.addContent(myWord);
+            root.addContent(newAlbum);
+            document.setContent(root);
+            //send back to xml file
+            try {
+                FileWriter writer = new FileWriter("/home/nguyen/Desktop/file.xml");
+                XMLOutputter outputter = new XMLOutputter();
+                outputter.setFormat(Format.getPrettyFormat());
+                outputter.output(document, writer);
+                outputter.output(document, System.out);
+                writer.close(); // close writer
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+        return false;
+    }
+
+    public List<Word> selectAlbum(File file, String id, String album)
+            throws JDOMException, IOException {
+        String query = "//album[@userId= '" + id + "' and @name='"
+                + album + "']/*";
         XPathExpression<Element> xpath = selectElement(query, file);
         List<Element> listNode = xpath.evaluate(document);
         List<Word> listWord = new ArrayList<>();
-        for (Element element : listNode) {
-            Word current = new Word();
-            current.setName(element.getChildTextTrim("name"));
-            current.setType(element.getChildTextTrim("type"));
-            current.setDefinition(element.getChildTextTrim("definition"));
-            listWord.add(current);
+        if (!listWord.isEmpty()) {
+            for (Element element : listNode) {
+                Word current = new Word();
+                current.setName(element.getChildTextTrim("name"));
+                current.setType(element.getChildTextTrim("type"));
+                current.setDefinition(element.getChildTextTrim("definition"));
+                listWord.add(current);
+            }
+            return listWord;
         }
-        return listWord;
+        return null;
     }
 
     public List<Album> selectAlbums(File file, String id)
             throws JDOMException, IOException {
         String query = "//album[@userId= '2']";
+        XPathExpression<Element> xpath = selectElement(query, file);
+        List<Element> listNode = xpath.evaluate(document);
+        if (!listNode.isEmpty()) {
+            List<Album> listAlbum = new ArrayList<>();
+            for (Element element : listNode) {
+                Album current = new Album();
+                current.setUserId(element.getAttributeValue("userId"));
+                current.setName(element.getAttributeValue("name"));
+                listAlbum.add(current);
+            }
+            return listAlbum;
+        }
+        return null;
+    }
+
+    public List<Album> selectLibrary(File file, String id)
+            throws JDOMException, IOException {
+        String query = "//album[@userId!= '2' and @public = 'true']";
         XPathExpression<Element> xpath = selectElement(query, file);
         List<Element> listNode = xpath.evaluate(document);
         List<Album> listAlbum = new ArrayList<>();
@@ -103,5 +165,21 @@ public class AlbumManager {
             listAlbum.add(current);
         }
         return listAlbum;
+    }
+
+    public boolean checkExist(File file, String album, String context, String keyword)
+            throws JDOMException, IOException {
+        String query = "";
+        if ("newAlbum".equals(context)) {
+            query = "//album[@name='" + album + "' and @userId='2']";
+        } else {
+            query = "albums/album[@userId= '2' and @name='" + album + "']/word[name='" + keyword + "']";
+        }
+        XPathExpression<Element> xpath = selectElement(query, file);
+        List<Element> listNode = xpath.evaluate(document);
+        if (listNode.isEmpty()) {
+            return true;
+        }
+        return false;
     }
 }

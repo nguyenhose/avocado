@@ -11,10 +11,18 @@
     <button onclick="ajaxRequest()">Find</button>
     <div class="search-custom">or you can <a id="custom-add" href="#"> custom add</a>.</div>
 </div>
-<div id="result" class="result-content" style="display:none">
-    
+<div class='result-content'>
+    <div id="result" style="display:none">
+
+    </div>
+    <div  id="button-save" style="display:none">
+        <div id='avc-add-button'>
+        </div>
+    </div>
+    <div  id="message" style="display:none">
+    </div>
 </div>
-<div  id="button-save" style="display:none">
-    <button onclick="saveToAlbum()">Add</button>
 </div>
+
+
 
