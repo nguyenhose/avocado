@@ -9,8 +9,12 @@
 
     </div>
 </div>
-<div class="avc-list-word" id="list-words" style="display:none">
-    
+
+<div class="avc-list-word" id="list-words" style="display:none"></div>
+<div class='controller' style="display:none">
+    <div onclick="previous()" id='previous'>Previous</div>
+    <div onclick="next()" id='next'>Next</div>
 </div>
+
 
 

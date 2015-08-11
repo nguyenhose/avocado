@@ -6,6 +6,7 @@
 package com.servlet;
 
 import com.collection.Word;
+import com.sun.xml.ws.runtime.dev.Session;
 import com.util.AlbumManager;
 import com.util.ParseHelper;
 import java.io.File;
@@ -73,13 +74,20 @@ public class SaveToAlbum extends HttpServlet {
         String definition = request.getParameter("definition");
         String name = request.getParameter("name");
         String album = request.getParameter("album");
+        String pronun = request.getParameter("pronun");
+        String origin = request.getParameter("origin");
+        String example = request.getParameter("exam");
         String status = request.getParameter("status");
+        String userId = request.getParameter("userId");
+        
 
         Word myWord = new Word();
         myWord.setName(name);
         myWord.setDefinition(definition);
         myWord.setType(type);
-
+        myWord.setPronun(pronun);
+        myWord.setExamples(example);
+        myWord.setOrigin(origin);
         File f = new File(fileUrl);
         if (f.exists() && !f.isDirectory()) {
             //update word to album
@@ -87,18 +95,18 @@ public class SaveToAlbum extends HttpServlet {
             try {
                 String data="";
                 if ("newAlbum".equals(status)) {
-                    if (am.checkExist(f, name, status, null)) {
-                        am.addAlbum(myWord, f, "2", album);
-                        data = "<div>Add album successful</div>";
+                    if (am.checkExist(f, name, status, null, userId)) {
+                        am.addAlbum(myWord, f, userId, album);
+                        data = "<div class='success'>Add album successful</div>";
                     } else {
-                        data = "<div>This album was existed</div>";
+                        data = "<div class='exist'>This album was existed</div>";
                     }
                 } else {
-                    if (am.checkExist(f, album, status, name)) {
-                        am.addWord(myWord, f, "2", album);
-                        data = "<div>Add word successful</div>";
+                    if (am.checkExist(f, album, status, name, userId)) {
+                        am.addWord(myWord, f, userId, album);
+                        data = "<div class='success'>Add word successful</div>";
                     } else {
-                         data = "<div>This word was existed in album</div>";
+                         data = "<div class='exist'>This word was existed in album</div>";
                     }
                 }
                 response.setContentType("text/plain");
@@ -110,7 +118,7 @@ public class SaveToAlbum extends HttpServlet {
         } else {
             //create new albums 
             ParseHelper parser = new ParseHelper();
-            parser.initalFile(myWord, f);
+            parser.initalFile(myWord, album, userId, f);
         }
 
     }

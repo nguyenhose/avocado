@@ -55,7 +55,14 @@ public class CreateWord extends HttpServlet {
             Word newWord = parser.getMeaning(result, word);
             data = "<div id='my-name'>" + newWord.getName() + "</div>"
                     + "<div id='my-type'>" + newWord.getType() + "</div>"
-                    + "<div id='my-definition'>" + newWord.getDefinition() + "</div>";
+                    + "<div id='my-pronun'>" + newWord.getPronun() + "</div>"
+                    +"<hr/><div class='info'>Meaning</div>"
+                    + "<div id='my-definition'>" + newWord.getDefinition() + "</div>"
+                    +"<hr/><div class='info'>Example</div>"
+                    +"<div id='my-example'>" + newWord.getExamples() + "</div>"
+                    +"<hr/><div class='info'>Origin</div>"
+                    +"<div id='my-origin'>" + newWord.getOrigin() + "</div>";
+            
         } else {
             data = "Not Found.";
         }

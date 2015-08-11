@@ -20,6 +20,7 @@ public class Album {
    private List<Word> word;
    private String userId;
    private String name;
+   private String pub;
 
     public List<Word> getWord() {
         return word;
@@ -35,6 +36,14 @@ public class Album {
     @XmlAttribute
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getPub() {
+        return pub;
+    }
+    @XmlAttribute
+    public void setPub(String pub) {
+        this.pub = pub;
     }
 
     public String getName() {

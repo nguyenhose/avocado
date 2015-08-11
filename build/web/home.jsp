@@ -16,6 +16,7 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link type="text/css" href="common/css/custom.css" rel="stylesheet"/>
+
     </head>
     <body onload="init()">
         <div class="avc-title">Avocado</div>
@@ -29,22 +30,26 @@ and open the template in the editor.
             <div class="avc-span" id="library-id">
                 <a href="#library" >Library</a>
             </div>
+            <div class="avc-span">
+                <a href="#login-from">
+
+                </a>
+            </div>
         </div>
         <div class="avc-content">
             <div class="avc-panel" id="new-album">
                 <jsp:include page="new_album.jsp"/>
             </div>
             <div class="avc-panel" id="my-album">
-                  <jsp:include page="albums.jsp"/>
+                <jsp:include page="albums.jsp"/>
             </div>
             <div class="avc-panel" id="library">
-                  <jsp:include page="library.jsp"/>
+                <jsp:include page="library.jsp"/>
             </div>
         </div>
+        <div id="user-id" data-id="${sessionScope._id}" />
         <div class="avc-footer"></div>
-        <script type="text/javascript" src="common/js/avc.js">
-   
-        </script>
+        <script type="text/javascript" src="common/js/avc.js"></script>
     </body>
 </html>
 

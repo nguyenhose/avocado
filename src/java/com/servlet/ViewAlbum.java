@@ -68,22 +68,27 @@ public class ViewAlbum extends HttpServlet {
         try {
             //processRequest(request, response);
             String album = request.getParameter("album");
+            String userId = request.getParameter("userId");
             AlbumManager am = new AlbumManager();
             File f = new File(SaveToAlbum.fileUrl);
-            List<Word> lw = am.selectAlbum(f, "2", album);
+            List<Word> lw = am.selectAlbum(f, userId, album);
             String data = "";
             if (!lw.isEmpty()) {
                 for (Word temp : lw) {
-                    data = "<div class='avc-word-item'>"
-                            + "<div onclick=\"toggleImage('" + temp.getName() + "')\">" + temp.getName() + "</div>"
-                            + "<div id='" + temp.getName() + "' class='item' style='display:none'>"
-                            +"<h4>"+temp.getName()+"</h4>"
+                    data = "<div class='card effect-click'"
+                            + "style='display:none'>"
+                            + "<div class='card-front'><div class='card-text'>"
+                            + temp.getName() + "</div></div>"
+                            + "<div id='" + temp.getName() + "' class='card-back'>"
+                            +"<div class='card-info'>"
                             + "<div id='my-type'>" + temp.getType() + "</div>"
                             + "<div>" + temp.getDefinition() + "</div>"
                             + "</div>"
+                            +"</div>"
                             + "</div>" + data;
                 }
                 data="<h4>"+album+"</h4>"+data;
+                
             }
             response.setContentType("text/plain");
             response.setCharacterEncoding("UTF-8");

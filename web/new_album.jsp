@@ -6,23 +6,50 @@
 --%>
 
 <div class="search-content">
-    <div class="search-title">Find meaning of word that you want to learn.</div>
-    <input name="word" type="text" id="key_word"/>
-    <button onclick="ajaxRequest()">Find</button>
-    <div class="search-custom">or you can <a id="custom-add" href="#"> custom add</a>.</div>
-</div>
-<div id='result-content' class='result-content' style='display:none'>
-    <div id="result" style="display:none">
-
+    <div id='mode'>
+        <div id="auto" onclick="return switchMode('auto')">Auto</div>
+        <div id="manual" onclick="return switchMode('manual')">Manual</div>
     </div>
-    <div  id="button-save" style="display:none">
-        <div id='avc-add-button'>
+    <div class="find-tool" id='auto-content' style="display: block">
+        <input name="word" type="text" id="key_word"/>
+        <button onclick="ajaxRequest()" class="search-button">Find</button>
+    </div>
+    <div id="custom-content" style='display:none' class="find-tool">
+        <table>
+            <tr>
+                <td><input name="manual-word" placeholder="word"></td>
+            </tr>
+            <tr>
+                <td><input name="manual-type" placeholder="type"></td>
+            </tr>
+            <tr>
+                <td><input name="manual-pro" placeholder="pronuncation"></td>
+            </tr>
+            <tr>
+                <td><textarea name="manual-defi" placeholder="definition"></textarea></td>
+            </tr>
+            <tr>
+                <td><textarea name="manual-ex" placeholder="example"></textarea></td>
+            </tr
+            <tr><td align="right"><button>Add</button></td></tr>
+        </table>
+    </div>
+</div>
+<div class="main-panel">
+    <div id='result-content' class='result-content' style='display:none'>
+        <div id="result" style="display:none">
+
+        </div>
+        <div  id="button-save" style="display:none">
+            <div id='avc-add-button'>
+            </div>
+        </div>
+        <div  id="message" style="display:none">
         </div>
     </div>
-    <div  id="message" style="display:none">
-    </div>
 </div>
-</div>
+
+
 
 
 

@@ -5,6 +5,13 @@
  */
 package com.servlet;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
 import com.util.MongoConnection;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,6 +20,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import org.jboss.weld.context.RequestContext;
 
 /**
  *
@@ -38,7 +47,7 @@ public class Login extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Login</title>");            
+            out.println("<title>Servlet Login</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet Login at " + request.getContextPath() + "</h1>");
@@ -75,9 +84,24 @@ public class Login extends HttpServlet {
             throws ServletException, IOException {
         String userName = request.getParameter("userName");
         String password = request.getParameter("password");
-        if(!userName.isEmpty() && !password.isEmpty()){
-        //checkExist
-            MongoConnection.getConnection();
+        if (!userName.isEmpty() && !password.isEmpty()) {
+            //checkExist
+            MongoClient mongo = MongoConnection.getConnection();
+            DB db = mongo.getDB("avocado");
+            DBCollection col = db.getCollection("users");
+            BasicDBObject fields = new BasicDBObject();
+            BasicDBObject allQuery = new BasicDBObject();
+            fields.put("name", userName);
+            fields.put("password", password);
+            DBCursor cursor = col.find(allQuery, fields);
+            if (cursor.hasNext()) {
+                BasicDBObject obj = (BasicDBObject) cursor.next();
+                HttpSession session = request.getSession();
+                session.setAttribute("_id", obj.getString("_id"));
+                response.sendRedirect("/avocado/home.jsp");
+            } else {
+                response.sendRedirect("/avocado/login.jsp");
+            }
         }
     }
 

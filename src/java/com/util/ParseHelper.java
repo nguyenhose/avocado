@@ -43,25 +43,33 @@ public class ParseHelper {
         Element definition = meaning.getElementsByClass("definition").get(0);
         Element type = doc.getElementsByClass("partOfSpeech").get(0);
         Element original = doc.getElementsByClass("etymology").get(0);
+        Element pronun = doc.getElementsByClass("headpron").get(0);
+        Element exam = doc.getElementsByClass("example").get(0);
+        
         word.setName(keyWord.text());
-        word.setOrigin(original.text());
-        word.setDefinition(definition.text());
+        if (!original.text().isEmpty()) {
+            word.setOrigin(original.text());
+        } else {
+            word.setOrigin("N/A");
+        }
+        word.setExamples(exam.text());
+        word.setPronun(pronun.text().split(":")[1]);
+        word.setDefinition(definition.text().replace(":","."));
         word.setType(type.text());
         word.setName(name);
         return word;
     }
 
-    public boolean initalFile(Word word, File file) {
+    public boolean initalFile(Word word,String name,String userId, File file) {
         Albums albums = new Albums();
         Album myAlbum = new Album();
         List<Word> listWords = new ArrayList<>();
         List<Album> listAlbums = new ArrayList<>();
         listWords.add(word);
-        listWords.add(word);
-        myAlbum.setName("fistOne");
-        myAlbum.setUserId("1");
+        myAlbum.setName(name);
+        myAlbum.setUserId(userId);
+        myAlbum.setPub("false");
         myAlbum.setWord(listWords);
-        listAlbums.add(myAlbum);
         listAlbums.add(myAlbum);
         albums.setAlbum(listAlbums);
         //create the xml file

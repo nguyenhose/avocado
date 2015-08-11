@@ -3,10 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/nguyen/NetBeansProjects/avocado/web/new_album.jsp</file>
-            <file>file:/home/nguyen/NetBeansProjects/avocado/src/java/com/servlet/ViewAlbums.java</file>
-            <file>file:/home/nguyen/NetBeansProjects/avocado/src/java/com/util/AlbumManager.java</file>
-            <file>file:/home/nguyen/NetBeansProjects/avocado/src/java/com/util/MongoConnection.java</file>
+            <file>file:/home/nguyen/NetBeansProjects/avocado/web/home.jsp</file>
+            <file>file:/home/nguyen/NetBeansProjects/avocado/src/java/com/servlet/ViewAlbum.java</file>
+            <file>file:/home/nguyen/NetBeansProjects/avocado/web/albums.jsp</file>
         </group>
     </open-files>
 </project-private>

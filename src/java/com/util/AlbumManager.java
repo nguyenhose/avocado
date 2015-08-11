@@ -50,7 +50,7 @@ public class AlbumManager {
 
     public boolean addWord(Word word, File file, String id, String album)
             throws JDOMException, IOException {
-        String query = "//*[@userId= '2' and @name='" + album + "']";
+        String query = "//*[@userId= '"+id+"' and @name='" + album + "']";
         XPathExpression<Element> xpath = selectElement(query, file);
         Element targetAlbum = xpath.evaluateFirst(document);
         if (targetAlbum != null) {
@@ -138,7 +138,7 @@ public class AlbumManager {
 
     public List<Album> selectAlbums(File file, String id)
             throws JDOMException, IOException {
-        String query = "//album[@userId= '2']";
+        String query = "//album[@userId= '"+id+"']";
         XPathExpression<Element> xpath = selectElement(query, file);
         List<Element> listNode = xpath.evaluate(document);
         if (!listNode.isEmpty()) {
@@ -156,7 +156,7 @@ public class AlbumManager {
 
     public List<Album> selectLibrary(File file, String id)
             throws JDOMException, IOException {
-        String query = "//album[@userId!= '2' and @public = 'true']";
+        String query = "//album[@userId!= '"+id+"' and @public = 'true']";
         XPathExpression<Element> xpath = selectElement(query, file);
         List<Element> listNode = xpath.evaluate(document);
         List<Album> listAlbum = new ArrayList<>();
@@ -169,13 +169,13 @@ public class AlbumManager {
         return listAlbum;
     }
 
-    public boolean checkExist(File file, String album, String context, String keyword)
+    public boolean checkExist(File file, String album, String context, String keyword, String userId)
             throws JDOMException, IOException {
         String query = "";
         if ("newAlbum".equals(context)) {
-            query = "//album[@name='" + album + "' and @userId='2']";
+            query = "//album[@name='" + album + "' and @userId='"+userId+"']";
         } else {
-            query = "albums/album[@userId= '2' and @name='" + album + "']/word[name='" + keyword + "']";
+            query = "albums/album[@userId= '"+userId+"' and @name='" + album + "']/word[name='" + keyword + "']";
         }
         XPathExpression<Element> xpath = selectElement(query, file);
         List<Element> listNode = xpath.evaluate(document);

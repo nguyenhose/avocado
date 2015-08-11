@@ -3,8 +3,31 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+index = 0;
+_id = '';
+document.onkeydown = checkKey;
 
+function checkKey(e) {
+    e = e || window.event
+    if (e.keyCode == '38') {
+        // up arrow
+
+    }
+    else if (e.keyCode == '40') {
+        // down arrow
+    }
+    else if (e.keyCode == '37') {
+        // left arrow
+        previous();
+    }
+    else if (e.keyCode == '39') {
+        // right arrow
+        next();
+    }
+}
 function init() {
+    var objectId = document.getElementById("user-id");
+    _id = objectId.getAttribute("data-id");
     toggleContent();
     viewAlbums();
 
@@ -66,6 +89,9 @@ function saveToAlbum(albumName, status) {
     var name = document.getElementById("my-name").innerHTML;
     var type = document.getElementById("my-type").innerHTML;
     var definition = document.getElementById("my-definition").innerHTML;
+    var pronun = document.getElementById("my-pronun").innerHTML;
+    var example = document.getElementById("my-example").innerHTML;
+    var origin = document.getElementById("my-origin").innerHTML;
     if (definition !== "") {
         xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
@@ -76,8 +102,6 @@ function saveToAlbum(albumName, status) {
                 document.getElementById("button-save").style.display = 'none';
                 document.getElementById("message").innerHTML = xmlhttp.responseText;
                 document.getElementById("message").style.display = 'block';
-
-
             }
         };
         xmlhttp.open("POST", "/avocado/SaveToAlbum", true);
@@ -87,14 +111,21 @@ function saveToAlbum(albumName, status) {
                     + "&definition=" + definition
                     + "&name=" + name
                     + "&album=" + albumName
+                    + "&pronun=" + pronun
+                    + "&origin=" + origin
+                    + "&exam=" + example
+                    + "&userId=" + _id
                     );
         } else {
-            xmlhttp.send(
-                    "type=" + type
+            xmlhttp.send("type=" + type
                     + "&definition=" + definition
                     + "&name=" + name
                     + "&album=" + albumName
                     + "&status=" + status
+                    + "&origin=" + origin
+                    + "&pronun=" + pronun
+                    + "&exam=" + example
+                    + "&userId=" + _id
                     );
         }
     }
@@ -116,10 +147,20 @@ function getListWord(id) {
         {
             document.getElementById("list-words").innerHTML = xmlhttp.responseText;
             document.getElementById("list-words").style.display = 'block';
+            startLearnMode();
         }
     };
-    xmlhttp.open("GET", "/avocado/ViewAlbum?album=" + id, true);
+    xmlhttp.open("GET", "/avocado/ViewAlbum?album=" + id +"&userId="+_id, true);
     xmlhttp.send();
+}
+
+function startLearnMode() {
+    var listWord = document.getElementsByClassName('effect-click');
+    var ctrl = document.getElementsByClassName('controller');
+    ctrl[0].style.display = 'block';
+    index = 0;
+    listWord[0].style.display = 'block';
+    registerClickEvent();
 }
 function viewAlbums() {
     var xmlhttp = new XMLHttpRequest();
@@ -130,7 +171,7 @@ function viewAlbums() {
 
         }
     };
-    xmlhttp.open("GET", "/avocado/ViewAlbums?userId=2", true);
+    xmlhttp.open("GET", "/avocado/ViewAlbums?userId=" + _id, true);
     xmlhttp.send();
 }
 function viewLibrary() {
@@ -141,7 +182,7 @@ function viewLibrary() {
             document.getElementById("public-album").innerHTML = xmlhttp.responseText;
         }
     };
-    xmlhttp.open("GET", "/avocado/ViewLibrary?userId=2", true);
+    xmlhttp.open("GET", "/avocado/ViewLibrary?userId=" + _id, true);
     xmlhttp.send();
 }
 function viewDropdown() {
@@ -152,7 +193,7 @@ function viewDropdown() {
             document.getElementById("avc-add-button").innerHTML = xmlhttp.responseText;
         }
     };
-    xmlhttp.open("GET", "/avocado/ViewAlbums?userId=2&mode=dropdown", true);
+    xmlhttp.open("GET", "/avocado/ViewAlbums?userId=" + _id + "&mode=dropdown", true);
     xmlhttp.send();
 }
 function toggleImage(itemId) {
@@ -243,4 +284,57 @@ function unfade(element) {
         op += op * 0.1;
     }, 10);
 }
+function next() {
+    var listWord = document.getElementsByClassName('effect-click');
+    if (index < listWord.length - 1) {
+        listWord[index].style.display = 'none'
+        index = index + 1;
+        listWord[index].style.display = 'block'
+    } else {
+        //index = 0;
+    }
 
+}
+function previous() {
+    var listWord = document.getElementsByClassName('effect-click');
+    if (index > 0) {
+        listWord[index].style.display = 'none'
+        index = index - 1;
+        listWord[index].style.display = 'block'
+    }
+}
+
+function upSide() {
+    var card = document.getElementsByClassName('effect-click')[index];
+    var content = document.getElementById(card.firstChild.innerHTML);
+    card.firstChild.textContent = "";
+    content.style.display = 'block';
+}
+function registerClickEvent() {
+    var cards = document.getElementsByClassName("effect-click");
+    for (var i = 0, len = cards.length; i < len; i++) {
+        var card = cards[i];
+        clickListener(card);
+    }
+}
+function clickListener(card) {
+    card.addEventListener("click", function () {
+        var c = this.classList;
+        c.contains("flipped") === true ? c.remove("flipped") : c.add("flipped");
+    });
+}
+function switchMode(mode){
+    var custom = document.getElementById('custom-content');
+    var auto = document.getElementById('auto-content');
+    document.getElementById('manual').setAttribute('class','');
+    document.getElementById('auto').setAttribute('class','');
+    if(mode === 'manual'){
+        custom.style.display = 'block';
+        auto.style.display ='none';
+        document.getElementById('manual').setAttribute('class','active');
+    }else{
+        custom.style.display = 'none';
+        auto.style.display ='block';
+        document.getElementById('auto').setAttribute('class','active');
+    }
+}

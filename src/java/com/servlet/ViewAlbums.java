@@ -71,9 +71,10 @@ public class ViewAlbums extends HttpServlet {
             String mode = request.getParameter("mode");
             AlbumManager am = new AlbumManager();
             File f = new File(SaveToAlbum.fileUrl);
+            String data = "";
             if (f.exists() && !f.isDirectory()) {
                 List<Album> lw = am.selectAlbums(f, userId);
-                String data = "";
+
                 if ("dropdown".equals(mode)) {
                     for (Album temp : lw) {
                         data = "<option value='" + temp.getName() + "'>" + temp.getName() + "</option>"
@@ -92,10 +93,15 @@ public class ViewAlbums extends HttpServlet {
                     }
                 }
 
-                response.setContentType("text/plain");
-                response.setCharacterEncoding("UTF-8");
-                response.getWriter().write(data);
+            } else {
+                data = "<button onclick='showDropdown()' id='avc-add-select'> Add To </button>\n"
+                        + "<select id='avc-dropdown'  onclick=\"addToAlbum()\">"
+                        + "<option value='new-album'>New album..</option>\n"
+                        + "</select>";
             }
+            response.setContentType("text/plain");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(data);
         } catch (JDOMException ex) {
             Logger.getLogger(ViewAlbums.class.getName()).log(Level.SEVERE, null, ex);
         }

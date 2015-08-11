@@ -14,19 +14,31 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class Word {
-  private  String name;
-  private  String definition;
-  private  String origin;
-  private  String examples;
-  private  String id;
-  private String type;
+
+    private String name;
+    private String definition;
+    private String origin;
+    private String examples;
+    private String id;
+    private String type;
+    private String pronun;
+
+    public String getPronun() {
+        return pronun;
+    }
+
+    @XmlElement
+    public void setPronun(String pronun) {
+        this.pronun = pronun;
+    }
 
     public Word() {
     }
-    
+
     public String getType() {
         return type;
     }
+
     @XmlElement
     public void setType(String type) {
         this.type = type;
@@ -35,14 +47,16 @@ public class Word {
     public String getName() {
         return name;
     }
+
     @XmlElement
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public String getDefinition() {
         return definition;
     }
+
     @XmlElement
     public void setDefinition(String definition) {
         this.definition = definition;
@@ -60,6 +74,7 @@ public class Word {
         return examples;
     }
 
+    @XmlElement
     public void setExamples(String examples) {
         this.examples = examples;
     }
@@ -71,5 +86,5 @@ public class Word {
     public void setId(String id) {
         this.id = id;
     }
-  
+
 }
