@@ -19,6 +19,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.jdom2.JDOMException;
 
 /**
@@ -67,7 +68,8 @@ public class ViewLibrary extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            String userId = request.getParameter("userId");
+            HttpSession session = request.getSession();
+            String userId = session.getAttribute("_id").toString();
             AlbumManager am = new AlbumManager();
             List<Album> publicAlbumList = new ArrayList<>();
             File f = new File(SaveToAlbum.fileUrl);
@@ -77,7 +79,10 @@ public class ViewLibrary extends HttpServlet {
 
                 for (Album al : publicAlbumList) {
                     data = "<div class='library-item'>"
-                            + al.getName() + "</div>" + data;
+                            + "<div class='public-user'>" + al.getUserId() + "</div>"
+                            + "<div class='public-name'>" + al.getName() + "</div>"
+                            + "<div class='public-follow'> Follow this album.</div>"
+                            + "</div>" + data;
                 }
                 response.setContentType("text/plain");
                 response.setCharacterEncoding("UTF-8");

@@ -5,7 +5,7 @@
     Author     : nguyen
 --%>
 
-<div class="search-content">
+<div class="navigator">
     <div id='mode'>
         <div id="auto" onclick="return switchMode('auto')">Auto</div>
         <div id="manual" onclick="return switchMode('manual')">Manual</div>
@@ -48,6 +48,7 @@
         </div>
     </div>
 </div>
+
 
 
 

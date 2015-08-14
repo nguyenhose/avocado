@@ -15,6 +15,7 @@ and open the template in the editor.
         <title>Avocado</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
         <link type="text/css" href="common/css/custom.css" rel="stylesheet"/>
 
     </head>
@@ -46,8 +47,6 @@ and open the template in the editor.
             <div class="avc-panel" id="library">
                 <jsp:include page="library.jsp"/>
             </div>
-        </div>
-        <div id="user-id" data-id="${sessionScope._id}" />
         <div class="avc-footer"></div>
         <script type="text/javascript" src="common/js/avc.js"></script>
     </body>

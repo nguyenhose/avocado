@@ -18,6 +18,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.jdom2.JDOMException;
 
 /**
@@ -68,7 +69,8 @@ public class ViewAlbum extends HttpServlet {
         try {
             //processRequest(request, response);
             String album = request.getParameter("album");
-            String userId = request.getParameter("userId");
+            HttpSession session = request.getSession();
+            String userId = session.getAttribute("_id").toString();
             AlbumManager am = new AlbumManager();
             File f = new File(SaveToAlbum.fileUrl);
             List<Word> lw = am.selectAlbum(f, userId, album);
@@ -80,15 +82,15 @@ public class ViewAlbum extends HttpServlet {
                             + "<div class='card-front'><div class='card-text'>"
                             + temp.getName() + "</div></div>"
                             + "<div id='" + temp.getName() + "' class='card-back'>"
-                            +"<div class='card-info'>"
+                            + "<div class='card-info'>"
                             + "<div id='my-type'>" + temp.getType() + "</div>"
                             + "<div>" + temp.getDefinition() + "</div>"
                             + "</div>"
-                            +"</div>"
+                            + "</div>"
                             + "</div>" + data;
                 }
-                data="<h4>"+album+"</h4>"+data;
-                
+                data = "<h4>" + album + "</h4>" + data;
+
             }
             response.setContentType("text/plain");
             response.setCharacterEncoding("UTF-8");

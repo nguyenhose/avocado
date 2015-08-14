@@ -6,7 +6,6 @@
 package com.servlet;
 
 import com.collection.Word;
-import com.sun.xml.ws.runtime.dev.Session;
 import com.util.AlbumManager;
 import com.util.ParseHelper;
 import java.io.File;
@@ -18,6 +17,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.jdom2.JDOMException;
 
 /**
@@ -78,7 +78,8 @@ public class SaveToAlbum extends HttpServlet {
         String origin = request.getParameter("origin");
         String example = request.getParameter("exam");
         String status = request.getParameter("status");
-        String userId = request.getParameter("userId");
+        HttpSession session = request.getSession();
+        String userId = session.getAttribute("_id").toString();
         
 
         Word myWord = new Word();

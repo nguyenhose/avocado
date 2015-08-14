@@ -11,10 +11,11 @@ function checkKey(e) {
     e = e || window.event
     if (e.keyCode == '38') {
         // up arrow
-
+        upSideDown();
     }
     else if (e.keyCode == '40') {
         // down arrow
+        upSideDown();
     }
     else if (e.keyCode == '37') {
         // left arrow
@@ -26,8 +27,6 @@ function checkKey(e) {
     }
 }
 function init() {
-    var objectId = document.getElementById("user-id");
-    _id = objectId.getAttribute("data-id");
     toggleContent();
     viewAlbums();
 
@@ -114,7 +113,6 @@ function saveToAlbum(albumName, status) {
                     + "&pronun=" + pronun
                     + "&origin=" + origin
                     + "&exam=" + example
-                    + "&userId=" + _id
                     );
         } else {
             xmlhttp.send("type=" + type
@@ -125,7 +123,6 @@ function saveToAlbum(albumName, status) {
                     + "&origin=" + origin
                     + "&pronun=" + pronun
                     + "&exam=" + example
-                    + "&userId=" + _id
                     );
         }
     }
@@ -150,7 +147,7 @@ function getListWord(id) {
             startLearnMode();
         }
     };
-    xmlhttp.open("GET", "/avocado/ViewAlbum?album=" + id +"&userId="+_id, true);
+    xmlhttp.open("GET", "/avocado/ViewAlbum?album=" + id , true);
     xmlhttp.send();
 }
 
@@ -171,7 +168,7 @@ function viewAlbums() {
 
         }
     };
-    xmlhttp.open("GET", "/avocado/ViewAlbums?userId=" + _id, true);
+    xmlhttp.open("GET", "/avocado/ViewAlbums", true);
     xmlhttp.send();
 }
 function viewLibrary() {
@@ -182,7 +179,7 @@ function viewLibrary() {
             document.getElementById("public-album").innerHTML = xmlhttp.responseText;
         }
     };
-    xmlhttp.open("GET", "/avocado/ViewLibrary?userId=" + _id, true);
+    xmlhttp.open("GET", "/avocado/ViewLibrary", true);
     xmlhttp.send();
 }
 function viewDropdown() {
@@ -193,7 +190,7 @@ function viewDropdown() {
             document.getElementById("avc-add-button").innerHTML = xmlhttp.responseText;
         }
     };
-    xmlhttp.open("GET", "/avocado/ViewAlbums?userId=" + _id + "&mode=dropdown", true);
+    xmlhttp.open("GET", "/avocado/ViewAlbums?mode=dropdown", true);
     xmlhttp.send();
 }
 function toggleImage(itemId) {
@@ -289,6 +286,7 @@ function next() {
     if (index < listWord.length - 1) {
         listWord[index].style.display = 'none'
         index = index + 1;
+        listWord[index].classList.remove("flipped");
         listWord[index].style.display = 'block'
     } else {
         //index = 0;
@@ -300,15 +298,16 @@ function previous() {
     if (index > 0) {
         listWord[index].style.display = 'none'
         index = index - 1;
-        listWord[index].style.display = 'block'
+        listWord[index].classList.remove("flipped");
+        listWord[index].style.display = 'block';
+
     }
 }
 
-function upSide() {
-    var card = document.getElementsByClassName('effect-click')[index];
-    var content = document.getElementById(card.firstChild.innerHTML);
-    card.firstChild.textContent = "";
-    content.style.display = 'block';
+function upSideDown() {
+    var listWord = document.getElementsByClassName('effect-click');
+    var c = listWord[index].classList;
+    c.contains("flipped") === true ? c.remove("flipped") : c.add("flipped");
 }
 function registerClickEvent() {
     var cards = document.getElementsByClassName("effect-click");
@@ -317,24 +316,27 @@ function registerClickEvent() {
         clickListener(card);
     }
 }
+function returnFront(card) {
+
+}
 function clickListener(card) {
-    card.addEventListener("click", function () {
+    card.addEventListener("keydown", function () {
         var c = this.classList;
         c.contains("flipped") === true ? c.remove("flipped") : c.add("flipped");
     });
 }
-function switchMode(mode){
+function switchMode(mode) {
     var custom = document.getElementById('custom-content');
     var auto = document.getElementById('auto-content');
-    document.getElementById('manual').setAttribute('class','');
-    document.getElementById('auto').setAttribute('class','');
-    if(mode === 'manual'){
+    document.getElementById('manual').setAttribute('class', '');
+    document.getElementById('auto').setAttribute('class', '');
+    if (mode === 'manual') {
         custom.style.display = 'block';
-        auto.style.display ='none';
-        document.getElementById('manual').setAttribute('class','active');
-    }else{
+        auto.style.display = 'none';
+        document.getElementById('manual').setAttribute('class', 'active');
+    } else {
         custom.style.display = 'none';
-        auto.style.display ='block';
-        document.getElementById('auto').setAttribute('class','active');
+        auto.style.display = 'block';
+        document.getElementById('auto').setAttribute('class', 'active');
     }
 }
