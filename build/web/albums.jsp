@@ -6,7 +6,6 @@
 <div class="navigator">
     <h4>List albums</h4>
     <div id="list-album">
-
     </div>
 </div>
 <div class="main-panel">
@@ -15,6 +14,8 @@
     <div onclick="previous()" id='previous'>Previous</div>
     <div onclick="next()" id='next'>Next</div>
 </div>
+</div>
+<div class="navigator-right" id="list-horizone-words">
 </div>
 
 

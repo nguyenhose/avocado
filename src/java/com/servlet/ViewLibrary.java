@@ -70,20 +70,29 @@ public class ViewLibrary extends HttpServlet {
         try {
             HttpSession session = request.getSession();
             String userId = session.getAttribute("_id").toString();
+            String keyword = request.getParameter("keyword");
             AlbumManager am = new AlbumManager();
             List<Album> publicAlbumList = new ArrayList<>();
             File f = new File(SaveToAlbum.fileUrl);
             if (f.exists() && !f.isDirectory()) {
-                publicAlbumList = am.selectLibrary(f, userId);
-                String data = "";
-
-                for (Album al : publicAlbumList) {
-                    data = "<div class='library-item'>"
-                            + "<div class='public-user'>" + al.getUserId() + "</div>"
-                            + "<div class='public-name'>" + al.getName() + "</div>"
-                            + "<div class='public-follow'> Follow this album.</div>"
-                            + "</div>" + data;
+                if (keyword != null) {
+                    publicAlbumList = am.searchLibrary(f, userId, keyword);
+                } else {
+                    publicAlbumList = am.selectLibrary(f, userId);
                 }
+                String data = "";
+                if (publicAlbumList.size() > 0) {
+                    for (Album al : publicAlbumList) {
+                        data = "<div class='library-item'>"
+                                + "<div class='public-user'>" + al.getUserId() + "</div>"
+                                + "<div class='public-name'>" + al.getName() + "</div>"
+                                + "<div class='public-follow'> Follow this album.</div>"
+                                + "</div>" + data;
+                    }
+                } else {
+                    data = "<div class='no-error'>No library, try again ?</div>";
+                }
+
                 response.setContentType("text/plain");
                 response.setCharacterEncoding("UTF-8");
                 response.getWriter().write(data);

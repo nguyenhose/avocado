@@ -48,14 +48,18 @@ body{
 }
 #avc-add-select{
     position: absolute;
-    top:0px;
+    top: 0px;
     z-index: 9;
     width: 100px;
+    /* right: -160px; */
+    left: 61px;
+    cursor: pointer;
 }
 #avc-dropdown{
     width: 100px;
     position: absolute;
-    top: 0px;
+    top: 15px;
+    opacity: 0;
 }
 a{
     text-decoration: none;
@@ -146,7 +150,7 @@ h4{
 }
 .result-content{
     text-align: left;
-    border: 1px solid;
+    border: 1px solid #ddd;
     padding: 15px;
     position: relative;
     background-color: white;
@@ -315,8 +319,15 @@ textarea{
     background-color: rgb(247, 247, 247)
 }
 .search-content{
+    position: relative;
     margin-left: 40%;
-    margin-top: 2%;
+    margin-top: 1%;
+}
+.search-content input{
+    border: 1px solid #E6E6E6;
+    height: 30px;
+    width: 250px;
+    font-family: monospace;
 }
 button{
     height: 30px;
@@ -349,4 +360,35 @@ button{
     bottom: 2px;
     font-size: 13px;
     right: 5px;
+}
+.w3-xxxlarge{
+    left: -36px;
+    bottom: -3px;
+    position: absolute;
+    font-size: 36px;
+    color: #949494;   
+}
+.search-topic{
+    padding: 2px 0px 5px;
+    font-family: monospace;
+    font-size: 20px;
+    color: #9A9292;
+    margin-left: 30px;
+}
+.no-error{
+    text-align: center;
+    margin: 10px;
+    font-size: 16px;
+    font-family: monospace;
+    color: #8E8E8E;
+}
+.item-word{
+    text-align: right;
+    padding: 8px;
+    font-size: 17px;
+    font-family: -webkit-pictograph;
+    border-bottom: 1px solid #ddd;
+}
+.item-word:nth-of-type(odd) {
+    background-color: #ddd;
 }

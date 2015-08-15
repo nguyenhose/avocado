@@ -81,7 +81,7 @@ public class ViewAlbums extends HttpServlet {
                         data = "<option value='" + temp.getName() + "'>" + temp.getName() + "</option>"
                                 + data;
                     }
-                    data = "<button onclick='showDropdown()' id='avc-add-select'> Add To </button>\n"
+                    data = "<i id='avc-add-select' class=\"w3-xxxlarge material-icons\"  onclick='showDropdown()'>add_circle_outline</i>\n" 
                             + "<select id='avc-dropdown'  onclick=\"addToAlbum()\">"
                             + data
                             + "<option value='new-album'>New album..</option>\n"
@@ -95,7 +95,7 @@ public class ViewAlbums extends HttpServlet {
                 }
 
             } else {
-                data = "<button onclick='showDropdown()' id='avc-add-select'> Add To </button>\n"
+                data = "<i id='avc-add-select' class=\"w3-xxxlarge material-icons\"  onclick='showDropdown()'>add_circle_outline</i>\n" 
                         + "<select id='avc-dropdown'  onclick=\"addToAlbum()\">"
                         + "<option value='new-album'>New album..</option>\n"
                         + "</select>";

@@ -29,7 +29,17 @@ function checkKey(e) {
 function init() {
     toggleContent();
     viewAlbums();
+    document.getElementById('search-library').addEventListener('keypress', searchLibrary);
+    document.getElementById('key_word').addEventListener('keypress', searchOnline);
 
+}
+function searchLibrary(evt)
+{
+    if (evt.keyCode === 13) searchLibrary();
+}
+function searchOnline(evt)
+{
+    if (evt.keyCode === 13) ajaxRequest();
 }
 function showDropdown() {
     var event;
@@ -37,6 +47,18 @@ function showDropdown() {
     event = document.createEvent('MouseEvents');
     event.initEvent('mousedown', true, true, window);
     dropdown.dispatchEvent(event);
+}
+function showListWord() {
+    var listCard = document.getElementsByClassName('card-front');
+    var wordZone = document.getElementById('list-horizone-words');
+    var listWord = "";
+    if (listCard.length > 0) {
+        for (var i = 0; i < listCard.length; i++) {
+            listWord = "<div class='item-word'>" + listCard[i].innerText +
+                    "</div>" + listWord;
+        }
+    }
+    wordZone.innerHTML =listWord;
 }
 function addToAlbum() {
     var myselect = document.getElementById("avc-dropdown");
@@ -145,9 +167,10 @@ function getListWord(id) {
             document.getElementById("list-words").innerHTML = xmlhttp.responseText;
             document.getElementById("list-words").style.display = 'block';
             startLearnMode();
+            showListWord();
         }
     };
-    xmlhttp.open("GET", "/avocado/ViewAlbum?album=" + id , true);
+    xmlhttp.open("GET", "/avocado/ViewAlbum?album=" + id, true);
     xmlhttp.send();
 }
 
@@ -181,6 +204,23 @@ function viewLibrary() {
     };
     xmlhttp.open("GET", "/avocado/ViewLibrary", true);
     xmlhttp.send();
+}
+function searchLibrary() {
+    var keyword = document.getElementById("search-library").value;
+    if (keyword !== "") {
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+                document.getElementById("public-album").innerHTML = xmlhttp.responseText;
+            }
+        };
+        xmlhttp.open("GET", "/avocado/ViewLibrary?keyword=" + keyword, true);
+        xmlhttp.send();
+    } else {
+        alert('Empty text!')
+    }
+
 }
 function viewDropdown() {
     var xmlhttp = new XMLHttpRequest();
@@ -340,3 +380,5 @@ function switchMode(mode) {
         document.getElementById('auto').setAttribute('class', 'active');
     }
 }
+
+    
