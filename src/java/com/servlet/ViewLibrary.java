@@ -6,7 +6,13 @@
 package com.servlet;
 
 import com.collection.Album;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.MongoClient;
 import com.util.AlbumManager;
+import com.util.MongoConnection;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -68,34 +74,49 @@ public class ViewLibrary extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            HttpSession session = request.getSession();
-            String userId = session.getAttribute("_id").toString();
-            String keyword = request.getParameter("keyword");
-            AlbumManager am = new AlbumManager();
-            List<Album> publicAlbumList = new ArrayList<>();
-            File f = new File(SaveToAlbum.fileUrl);
-            if (f.exists() && !f.isDirectory()) {
-                if (keyword != null) {
-                    publicAlbumList = am.searchLibrary(f, userId, keyword);
-                } else {
-                    publicAlbumList = am.selectLibrary(f, userId);
-                }
-                String data = "";
-                if (publicAlbumList.size() > 0) {
-                    for (Album al : publicAlbumList) {
-                        data = "<div class='library-item'>"
-                                + "<div class='public-user'>" + al.getUserId() + "</div>"
-                                + "<div class='public-name'>" + al.getName() + "</div>"
-                                + "<div class='public-follow'> Follow this album.</div>"
-                                + "</div>" + data;
+            HttpSession session = request.getSession(false);
+            if (!session.isNew() && session != null) {
+                String userId = session.getAttribute("_id").toString();
+                String keyword = request.getParameter("keyword");
+                AlbumManager am = new AlbumManager();
+                List<Album> publicAlbumList = new ArrayList<>();
+                File f = new File(SaveToAlbum.fileUrl);
+                if (f.exists() && !f.isDirectory()) {
+                    if (keyword != null) {
+                        publicAlbumList = am.searchLibrary(f, userId, keyword);
+                    } else {
+                        publicAlbumList = am.selectLibrary(f, userId);
                     }
-                } else {
-                    data = "<div class='no-error'>No library, try again ?</div>";
-                }
+                    String data = "";
+                    String name = "";
+                    if (publicAlbumList.size() > 0) {
+                        MongoClient mongo = MongoConnection.getConnection();
+                        DB db = mongo.getDB("avocado");
+                        DBCollection col = db.getCollection("users");
 
-                response.setContentType("text/plain");
-                response.setCharacterEncoding("UTF-8");
-                response.getWriter().write(data);
+                        for (Album al : publicAlbumList) {
+                            BasicDBObject allQuery = new BasicDBObject("_id", al.getUserId());
+                            DBCursor cursor = col.find(allQuery);
+                            if (cursor.hasNext()) {
+                                BasicDBObject obj = (BasicDBObject) cursor.next();
+                                name = obj.getString("name");
+                            }
+                            data = "<div class='library-item'>"
+                                    + "<div class='public-user'>" + name + "</div>"
+                                    + "<div class='public-name'>" + al.getName() + "</div>"
+                                    + "<div class='public-follow'> Follow this album.</div>"
+                                    + "</div>" + data;
+                        }
+                    } else {
+                        data = "<div class='no-error'>No library, try again ?</div>";
+                    }
+
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(data);
+                }
+            } else {
+                response.sendRedirect("/avocado/login.jsp");
             }
         } catch (JDOMException ex) {
             Logger.getLogger(ViewLibrary.class.getName()).log(Level.SEVERE, null, ex);

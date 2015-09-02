@@ -10,6 +10,7 @@ import com.util.AlbumManager;
 import com.util.ParseHelper;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -18,7 +19,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.XMLConstants;
+import javax.xml.bind.Validator;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
 import org.jdom2.JDOMException;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -69,6 +77,8 @@ public class SaveToAlbum extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String path = getServletContext().getRealPath("/");
+        String xsdPath = path + "common/avcSchema.xsd";
 
         String type = request.getParameter("type");
         String definition = request.getParameter("definition");
@@ -80,7 +90,6 @@ public class SaveToAlbum extends HttpServlet {
         String status = request.getParameter("status");
         HttpSession session = request.getSession();
         String userId = session.getAttribute("_id").toString();
-        
 
         Word myWord = new Word();
         myWord.setName(name);
@@ -89,38 +98,64 @@ public class SaveToAlbum extends HttpServlet {
         myWord.setPronun(pronun);
         myWord.setExamples(example);
         myWord.setOrigin(origin);
+
+        String data = "";
         File f = new File(fileUrl);
         if (f.exists() && !f.isDirectory()) {
             //update word to album
             AlbumManager am = new AlbumManager();
             try {
-                String data="";
                 if ("newAlbum".equals(status)) {
-                    if (am.checkExist(f, name, status, null, userId)) {
-                        am.addAlbum(myWord, f, userId, album);
-                        data = "<div class='success'>Add album successful</div>";
+                    if (am.checkExist(f, album, status, null, userId)) {
+                        if (am.addAlbum(myWord, f, userId, album)) {
+                            data = "<div class='success'>Add album successful</div>";
+                        }
                     } else {
                         data = "<div class='exist'>This album was existed</div>";
                     }
                 } else {
                     if (am.checkExist(f, album, status, name, userId)) {
-                        am.addWord(myWord, f, userId, album);
-                        data = "<div class='success'>Add word successful</div>";
+                        if (am.addWord(myWord, f, userId, album)) {
+                            data = "<div class='success'>Add word successful</div>";
+                        }
                     } else {
-                         data = "<div class='exist'>This word was existed in album</div>";
+                        data = "<div class='exist'>This word was existed in album</div>";
                     }
                 }
-                response.setContentType("text/plain");
-                response.setCharacterEncoding("UTF-8");
-                response.getWriter().write(data);
             } catch (JDOMException ex) {
                 Logger.getLogger(SaveToAlbum.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            //create new albums 
-            ParseHelper parser = new ParseHelper();
-            parser.initalFile(myWord, album, userId, f);
+            try {
+                //create new albums
+                ParseHelper parser = new ParseHelper();
+                boolean result = parser.initalFile(myWord, album, userId, f);
+                //validate  by schema
+                Source schemaFile = new StreamSource(xsdPath);
+                Source xmlFile = new StreamSource(new File(f.getPath()));
+                SchemaFactory schemaFactory = SchemaFactory
+                        .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+                Schema schema = schemaFactory.newSchema(schemaFile);
+                javax.xml.validation.Validator validator = schema.newValidator();
+                try {
+                    validator.validate(xmlFile);
+                    System.out.println(xmlFile.getSystemId() + " is valid");
+                } catch (SAXException e) {
+                    System.out.println(xmlFile.getSystemId() + " ");
+                    System.out.println("Reason: " + e.getLocalizedMessage());
+                }
+                if (result) {
+                    data = "<div class='success'>Add album and first word successful</div>";
+                } else {
+                    data = "<div class='success'>Something went wrong..try later.</div>";
+                }
+            } catch (SAXException ex) {
+                Logger.getLogger(SaveToAlbum.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+        response.setContentType("text/plain");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(data);
 
     }
 

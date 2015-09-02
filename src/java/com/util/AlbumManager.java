@@ -64,7 +64,7 @@ public class AlbumManager {
             document.setContent(root);
             //send back to xml file
             try {
-                FileWriter writer = new FileWriter("/home/nguyen/Desktop/file.xml");
+                FileWriter writer = new FileWriter(file.getPath());
                 XMLOutputter outputter = new XMLOutputter();
                 outputter.setFormat(Format.getPrettyFormat());
                 outputter.output(document, writer);
@@ -89,7 +89,7 @@ public class AlbumManager {
             Element newAlbum = new Element("album");
             newAlbum.setAttribute("userId", id);
             newAlbum.setAttribute("name", album);
-            newAlbum.setAttribute("public", "false");
+            newAlbum.setAttribute("pub", "false");
             //add word
             Element myWord = new Element("word");
             myWord.addContent(new Element("definition").setText(word.getDefinition()));
@@ -129,6 +129,8 @@ public class AlbumManager {
                 current.setName(element.getChildTextTrim("name"));
                 current.setType(element.getChildTextTrim("type"));
                 current.setDefinition(element.getChildTextTrim("definition"));
+//                current.setExamples(element.getChildTextTrim("examples"));
+//                current.setPronun(element.getChildTextTrim("pronun"));
                 listWord.add(current);
             }
             return listWord;
@@ -147,6 +149,7 @@ public class AlbumManager {
                 Album current = new Album();
                 current.setUserId(element.getAttributeValue("userId"));
                 current.setName(element.getAttributeValue("name"));
+                current.setPub(element.getAttributeValue("pub"));
                 listAlbum.add(current);
             }
             return listAlbum;
@@ -156,7 +159,7 @@ public class AlbumManager {
 
     public List<Album> selectLibrary(File file, String id)
             throws JDOMException, IOException {
-        String query = "//album[@userId!= '" + id + "' and @public = 'true']";
+        String query = "//album[@userId!= '" + id + "' and @pub = 'true']";
         XPathExpression<Element> xpath = selectElement(query, file);
         List<Element> listNode = xpath.evaluate(document);
         List<Album> listAlbum = new ArrayList<>();
@@ -166,28 +169,27 @@ public class AlbumManager {
                 current.setUserId(element.getAttributeValue("userId"));
                 current.setName(element.getAttributeValue("name"));
                 listAlbum.add(current);
-            }else{
+            } else {
                 break;
             }
         }
         return listAlbum;
     }
-    
+
     public List<Album> searchLibrary(File file, String id, String key)
             throws JDOMException, IOException {
-        String query = "//album[@userId!= '" + id + "' and @public = 'true' and contains(@name,'"+key+"')]";
+        String query = "//album[@userId!= '" + id + "' and @pub = 'true' and contains(@name,'" + key + "')]";
         XPathExpression<Element> xpath = selectElement(query, file);
         List<Element> listNode = xpath.evaluate(document);
         List<Album> listAlbum = new ArrayList<>();
         for (Element element : listNode) {
-                Album current = new Album();
-                current.setUserId(element.getAttributeValue("userId"));
-                current.setName(element.getAttributeValue("name"));
-                listAlbum.add(current);
+            Album current = new Album();
+            current.setUserId(element.getAttributeValue("userId"));
+            current.setName(element.getAttributeValue("name"));
+            listAlbum.add(current);
         }
         return listAlbum;
     }
-    
 
     public boolean checkExist(File file, String album, String context, String keyword, String userId)
             throws JDOMException, IOException {
@@ -201,6 +203,33 @@ public class AlbumManager {
         List<Element> listNode = xpath.evaluate(document);
         if (listNode.isEmpty()) {
             return true;
+        }
+        return false;
+    }
+
+    public boolean publishAlbum(File file, String album, String userId)
+            throws JDOMException, IOException {
+        String query = "";
+        query = "albums/album[@userId= '" + userId + "' and @name='" + album + "']";
+        XPathExpression<Element> xpath = selectElement(query, file);
+        List<Element> listNode = xpath.evaluate(document);
+        for (Element element : listNode) {
+            if (element.getAttribute("pub").getValue().equals("true")) {
+                element.getAttribute("pub").setValue("false");
+            } else {
+                element.getAttribute("pub").setValue("true");
+            }
+        }
+        try {
+            FileWriter writer = new FileWriter(SaveToAlbum.fileUrl);
+            XMLOutputter outputter = new XMLOutputter();
+            outputter.setFormat(Format.getPrettyFormat());
+            outputter.output(document, writer);
+            outputter.output(document, System.out);
+            writer.close(); // close writer
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return false;
     }

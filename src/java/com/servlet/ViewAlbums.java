@@ -68,41 +68,51 @@ public class ViewAlbums extends HttpServlet {
             throws ServletException, IOException {
         try {
             HttpSession session = request.getSession();
-            String userId = session.getAttribute("_id").toString();
             String mode = request.getParameter("mode");
             AlbumManager am = new AlbumManager();
             File f = new File(SaveToAlbum.fileUrl);
             String data = "";
-            if (f.exists() && !f.isDirectory()) {
-                List<Album> lw = am.selectAlbums(f, userId);
+            if (!session.isNew()) {
+                String userId = session.getAttribute("_id").toString();
+                if (f.exists() && !f.isDirectory()) {
+                    List<Album> lw = am.selectAlbums(f, userId);
+                    if (lw != null) {
+                        if ("dropdown".equals(mode)) {
+                            for (Album temp : lw) {
+                                data = "<option value='" + temp.getName() + "'>" + temp.getName() + "</option>"
+                                        + data;
+                            }
+                            data = "<i id='avc-add-select' class=\"w3-xxxlarge material-icons\"  onclick='showDropdown()'>add_circle_outline</i>\n"
+                                    + "<select id='avc-dropdown'  onclick=\"addToAlbum()\">"
+                                    + data
+                                    + "<option value='new-album'>New album..</option>\n"
+                                    + "</select>";
+                        } else {
+                            for (Album temp : lw) {
+                                data = "<div class='avc-album-item' id='" + temp.getName() +"."+temp.getPub()+"'> "
+                                        + "<div class='avc-word-key' id='" + temp.getName() +
+                                        "' onclick=\"getListWord('" + temp.getName() + "')\">" + temp.getName() + "</div>"
+                                        + "</div>" + data;
+                            }
+                        }
 
-                if ("dropdown".equals(mode)) {
-                    for (Album temp : lw) {
-                        data = "<option value='" + temp.getName() + "'>" + temp.getName() + "</option>"
-                                + data;
+                    } else {
+                        data = "<i id='avc-add-select' class=\"w3-xxxlarge material-icons\"  onclick='showDropdown()'>add_circle_outline</i>\n"
+                                + "<select id='avc-dropdown'  onclick=\"addToAlbum()\">"
+                                + "<option value='new-album'>New album..</option>\n"
+                                + "</select>";
                     }
-                    data = "<i id='avc-add-select' class=\"w3-xxxlarge material-icons\"  onclick='showDropdown()'>add_circle_outline</i>\n" 
+
+                } else {
+                    data = "<i id='avc-add-select' class=\"w3-xxxlarge material-icons\"  onclick='showDropdown()'>add_circle_outline</i>\n"
                             + "<select id='avc-dropdown'  onclick=\"addToAlbum()\">"
-                            + data
                             + "<option value='new-album'>New album..</option>\n"
                             + "</select>";
-                } else {
-                    for (Album temp : lw) {
-                        data = "<div class='avc-album-item'>"
-                                + "<div class='avc-word-key' id='" + temp.getName() + "' onclick=\"getListWord('" + temp.getName() + "')\">" + temp.getName() + "</div>"
-                                + "</div>" + data;
-                    }
                 }
-
-            } else {
-                data = "<i id='avc-add-select' class=\"w3-xxxlarge material-icons\"  onclick='showDropdown()'>add_circle_outline</i>\n" 
-                        + "<select id='avc-dropdown'  onclick=\"addToAlbum()\">"
-                        + "<option value='new-album'>New album..</option>\n"
-                        + "</select>";
+                response.setContentType("text/plain");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write(data);
             }
-            response.setContentType("text/plain");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(data);
         } catch (JDOMException ex) {
             Logger.getLogger(ViewAlbums.class.getName()).log(Level.SEVERE, null, ex);
         }

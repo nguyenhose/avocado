@@ -73,28 +73,35 @@ public class ViewAlbum extends HttpServlet {
             String userId = session.getAttribute("_id").toString();
             AlbumManager am = new AlbumManager();
             File f = new File(SaveToAlbum.fileUrl);
-            List<Word> lw = am.selectAlbum(f, userId, album);
             String data = "";
-            if (!lw.isEmpty()) {
-                for (Word temp : lw) {
-                    data = "<div class='card effect-click'"
-                            + "style='display:none'>"
-                            + "<div class='card-front'><div class='card-text'>"
-                            + temp.getName() + "</div></div>"
-                            + "<div id='" + temp.getName() + "' class='card-back'>"
-                            + "<div class='card-info'>"
-                            + "<div id='my-type'>" + temp.getType() + "</div>"
-                            + "<div>" + temp.getDefinition() + "</div>"
-                            + "</div>"
-                            + "</div>"
-                            + "</div>" + data;
+            if (userId != "") {
+                List<Word> lw = am.selectAlbum(f, userId, album);
+                if (lw!=null) {
+                    for (Word temp : lw) {
+                        data = "<div class='card effect-click'"
+                                + "style='display:none'>"
+                                + "<div class='card-front'>"
+                                + "<div class='card-text'>"
+                                + temp.getName()
+                                + "</div>"
+                                + "</div>"
+                                + "<div id='" + temp.getName() + "' class='card-back'>"
+                                + "<div class='card-info'>"
+                                + "<div id='my-type'>" + temp.getType() + "</div>"
+                                + "<div class='my-definition'>" + temp.getDefinition() + "</div>"
+                                + "</div>"
+                                + "</div>"
+                                + "</div>" + data;
+                    }
+                    data = "<h4>" + album + "</h4>" + data;
+                    response.setContentType("text/plain");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(data);
                 }
-                data = "<h4>" + album + "</h4>" + data;
-
+            } else {
+                response.sendRedirect("Login");
             }
-            response.setContentType("text/plain");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(data);
+
         } catch (JDOMException ex) {
             Logger.getLogger(ViewAlbum.class.getName()).log(Level.SEVERE, null, ex);
         }

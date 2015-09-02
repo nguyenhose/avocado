@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<albums>
+  <album name="Wh-" pub="false" userId="123">
+    <word>
+      <definition>In or to what place or position.</definition>
+      <examples>where do you live?</examples>
+      <name>where</name>
+      <origin>Origin Old English hwÇ£r, of Germanic origin; related to Dutch waar and German wo.</origin>
+      <pronun>/wÉË/</pronun>
+      <type>interrogative adverb</type>
+    </word>
+    <word>
+      <definition>Asking for information specifying something.</definition>
+      <name>what</name>
+      <type>pronoun</type>
+    </word>
+    <word>
+      <definition>What or which person or people.</definition>
+      <name>who</name>
+      <type>pronoun</type>
+    </word>
+    <word>
+      <definition>For what reason or purpose.</definition>
+      <name>why</name>
+      <type>interrogative adverb</type>
+    </word>
+    <word>
+      <definition>A man in relation to his child or children.</definition>
+      <name>father</name>
+      <type>noun</type>
+    </word>
+    <word>
+      <definition>A pear-shaped fruit with a rough leathery skin and smooth, oily edible flesh.</definition>
+      <name>avocado</name>
+      <type>noun</type>
+    </word>
+  </album>
+  <album userId="123" name="family" public="false">
+    <word>
+      <definition>A woman in relation to a child or children to whom she has given birth.</definition>
+      <name>mother</name>
+      <type>noun</type>
+    </word>
+    <word>
+      <definition>A man or boy in relation to other sons and daughters of his parents.</definition>
+      <name>brother</name>
+      <type>noun</type>
+    </word>
+    <word>
+      <definition>A woman or girl in relation to other daughters and sons of her parents.</definition>
+      <name>sister</name>
+      <type>noun</type>
+    </word>
+    <word>
+      <definition>An instrument composed of a blade fixed into a handle, used for cutting or as a weapon.</definition>
+      <name>knife</name>
+      <type>noun</type>
+    </word>
+    <word>
+      <definition>The goods or merchandise kept on the premises of a shop or warehouse and available for sale or distribution.</definition>
+      <name>stock</name>
+      <type>noun</type>
+    </word>
+  </album>
+  <album userId="123" name="animal" public="false">
+    <word>
+      <definition>A small rodent that typically has a pointed snout, relatively large ears and eyes, and a long tail.</definition>
+      <name>mouse</name>
+      <type>noun</type>
+    </word>
+    <word>
+      <definition>Used to identify a specific person or thing close at hand or being indicated or experienced.</definition>
+      <name>this</name>
+      <type>pronoun</type>
+    </word>
+    <word>
+      <definition>An implement consisting of a small, shallow oval or round bowl on a long handle, used for eating, stirring, and serving food.</definition>
+      <name>spoon</name>
+      <type>noun</type>
+    </word>
+  </album>
+  <album userId="124" name="animal" public="true">
+    <word>
+      <definition>A small rodent that typically has a pointed snout, relatively large ears and eyes, and a long tail.</definition>
+      <name>mouse</name>
+      <type>noun</type>
+    </word>
+  </album>
+  <album userId="124" name="none" public="true">
+    <word>
+      <definition>A small rodent that typically has a pointed snout, relatively large ears and eyes, and a long tail.</definition>
+      <name>mouse</name>
+      <type>noun</type>
+    </word>
+  </album>
+</albums>

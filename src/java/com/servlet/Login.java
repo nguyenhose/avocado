@@ -89,11 +89,9 @@ public class Login extends HttpServlet {
             MongoClient mongo = MongoConnection.getConnection();
             DB db = mongo.getDB("avocado");
             DBCollection col = db.getCollection("users");
-            BasicDBObject fields = new BasicDBObject();
-            BasicDBObject allQuery = new BasicDBObject();
-            fields.put("name", userName);
-            fields.put("password", password);
-            DBCursor cursor = col.find(allQuery, fields);
+            BasicDBObject allQuery = new BasicDBObject("name", userName)
+                    .append("password", password);
+            DBCursor cursor = col.find(allQuery);
             if (cursor.hasNext()) {
                 BasicDBObject obj = (BasicDBObject) cursor.next();
                 HttpSession session = request.getSession();

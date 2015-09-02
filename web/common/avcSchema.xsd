@@ -19,13 +19,14 @@ and open the template in the editor.
                     <xs:element type="xs:string" name="name"/>
                     <xs:element type="xs:string" name="type"/>
                     <xs:element type="xs:string" name="example"/>
+                    <xs:element type="xs:string" name="pronun"/>
                   </xs:sequence>
                 </xs:complexType>
               </xs:element>
             </xs:sequence>
             <xs:attribute type="xs:string" name="userId" use="optional"/>
             <xs:attribute type="xs:string" name="name" use="optional"/>
-            <xs:attribute type="xs:string" name="public" use="optional"/>
+            <xs:attribute type="xs:string" name="pub" use="optional"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>

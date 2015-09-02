@@ -7,7 +7,7 @@
     <div class="search-content">
         <div class="search-topic"> Search Topic</div>
     <input type="text" id="search-library" />
-    <i class="w3-xxxlarge material-icons">search</i>
+    <!--<i class="w3-xxxlarge material-icons">search</i>-->
     </div>
     <div>
     <div id="public-album">

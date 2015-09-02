@@ -47,7 +47,27 @@ and open the template in the editor.
             <div class="avc-panel" id="library">
                 <jsp:include page="library.jsp"/>
             </div>
+        </div>
         <div class="avc-footer"></div>
+        <div id="test-modal">
+            <div id="test-content">
+                <div class="test-close" onclick="closeModal()">x</div>
+                <div id="test-process">
+                    <div class="test-title"> Fill word follow their meanings</div>
+                    <div id="test-card">
+
+                    </div>
+                    <div>
+                        <input type="text" id="test-input" autofocus>
+                    </div>  
+                </div>
+                <div id="test-result" style="display:none">
+                    <div class="test-title">Review mistake</div>
+                    <div id="test-result-list"></div>
+                </div>
+                <div id="test-des">If you do not know this word, press Enter to continue.</div>
+            </div>
+        </div>
         <script type="text/javascript" src="common/js/avc.js"></script>
     </body>
 </html>

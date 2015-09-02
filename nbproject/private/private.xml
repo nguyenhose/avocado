@@ -4,12 +4,16 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/nguyen/NetBeansProjects/avocado/web/home.jsp</file>
-            <file>file:/home/nguyen/NetBeansProjects/avocado/src/java/com/servlet/ViewLibrary.java</file>
+            <file>file:/home/nguyen/NetBeansProjects/avocado/web/new_album.jsp</file>
             <file>file:/home/nguyen/NetBeansProjects/avocado/src/java/com/util/ParseHelper.java</file>
             <file>file:/home/nguyen/NetBeansProjects/avocado/src/java/com/servlet/ViewAlbums.java</file>
+            <file>file:/home/nguyen/NetBeansProjects/avocado/src/java/com/servlet/PDFExport.java</file>
             <file>file:/home/nguyen/NetBeansProjects/avocado/web/albums.jsp</file>
             <file>file:/home/nguyen/NetBeansProjects/avocado/src/java/com/util/AlbumManager.java</file>
+            <file>file:/home/nguyen/NetBeansProjects/avocado/web/library.jsp</file>
+            <file>file:/home/nguyen/NetBeansProjects/avocado/src/java/com/servlet/SaveToAlbum.java</file>
             <file>file:/home/nguyen/NetBeansProjects/avocado/src/java/com/servlet/CreateWord.java</file>
+            <file>file:/home/nguyen/NetBeansProjects/avocado/web/common/avcXSL.xsl</file>
         </group>
     </open-files>
 </project-private>

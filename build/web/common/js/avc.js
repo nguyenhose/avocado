@@ -3,12 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+/* global listObject */
+
 index = 0;
+testIndex = 0;
 _id = '';
+listObject = []
+score = 0;
 document.onkeydown = checkKey;
 
 function checkKey(e) {
-    e = e || window.event
+    e = e || window.event;
     if (e.keyCode == '38') {
         // up arrow
         upSideDown();
@@ -28,18 +33,110 @@ function checkKey(e) {
 }
 function init() {
     toggleContent();
-    viewAlbums();
-    document.getElementById('search-library').addEventListener('keypress', searchLibrary);
-    document.getElementById('key_word').addEventListener('keypress', searchOnline);
+    document.getElementById('search-library').addEventListener('keypress', searchLibraryInput);
+    document.getElementById('key_word').addEventListener('keypress', searchOnlineInput);
+    document.getElementById('test-input').addEventListener('keypress', testInput);
+    document.getElementById('key_word').focus();
+}
+
+//LIBRARY TAB
+function searchLibraryInput(evt) {
+    if (evt.keyCode === 13)
+        searchLibrary();
+}
+function searchLibrary() {
+    var keyword = document.getElementById("search-library").value;
+    if (keyword.trim() !== "") {
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+                document.getElementById("public-album").innerHTML = xmlhttp.responseText;
+            }
+        };
+        xmlhttp.open("GET", "/avocado/ViewLibrary?keyword=" + keyword, true);
+        xmlhttp.send();
+    } else {
+        alert('Empty text!')
+    }
 
 }
-function searchLibrary(evt)
-{
-    if (evt.keyCode === 13) searchLibrary();
+
+//NEWWORD TAB
+function searchOnlineInput(evt) {
+    if (evt.keyCode === 13)
+        searchOnline();
 }
-function searchOnline(evt)
-{
-    if (evt.keyCode === 13) ajaxRequest();
+function searchOnline() {
+    var xmlhttp;
+    var name = document.getElementById("key_word").value;
+    if (name.trim() !== "") {
+        document.getElementById("result-content").style.display = 'inline-block';
+        document.getElementById("result").style.display = 'block';
+        document.getElementById("result").innerHTML = 'Loading...';
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+            {
+
+
+                document.getElementById("message").style.display = 'none';
+                if ("Not Found." !== xmlhttp.responseText) {
+                    document.getElementById("button-save").style.display = 'block';
+                    document.getElementById("result").innerHTML = xmlhttp.responseText;
+                    viewDropdown();
+                } else {
+                    document.getElementById("search-des").style.display = 'Not Found.';
+                }
+            }
+        };
+        xmlhttp.open("GET", "/avocado/CreateWord?word=" + name, true);
+        xmlhttp.send();
+    }
+    else {
+        alert('Keyword is empty');
+    }
+}
+//TEST
+function testInput(evt) {
+    if (evt.keyCode === 13)
+        checkAndNext();
+}
+function checkAndNext() {
+    var inputVal = document.getElementById('test-input').value.trim();
+    if (inputVal === listObject[testIndex].key)
+    {
+        score = score + 1;
+    }
+    else {
+        listObject[testIndex].input = inputVal;
+    }
+    testIndex = testIndex + 1;
+    if (listObject.length > testIndex) {
+        startQuiz();
+    }
+    else {
+        showResult();
+    }
+    inputVal = document.getElementById('test-input').value = "";
+}
+function showTest() {
+    tm = document.getElementById("test-modal");
+    tm.style.visibility = (tm.style.visibility == "visible") ? "hidden" : "visible";
+    startTestMode();
+}
+
+//HELPER FUNCTION
+function viewDropdown() {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+        {
+            document.getElementById("avc-add-button").innerHTML = xmlhttp.responseText;
+        }
+    };
+    xmlhttp.open("GET", "/avocado/ViewAlbums?mode=dropdown", true);
+    xmlhttp.send();
 }
 function showDropdown() {
     var event;
@@ -48,9 +145,17 @@ function showDropdown() {
     event.initEvent('mousedown', true, true, window);
     dropdown.dispatchEvent(event);
 }
+//ALBUMS
 function showListWord() {
     var listCard = document.getElementsByClassName('card-front');
     var wordZone = document.getElementById('list-horizone-words');
+    var shareStatus = document.getElementsByClassName('avc-album-item album-active')[0].id;
+    if (shareStatus.split('.')[1] === 'true') {
+        document.getElementById('album-status').innerText = 'un-publish'
+    } else {
+        document.getElementById('album-status').innerText = 'Publish'
+
+    }
     var listWord = "";
     if (listCard.length > 0) {
         for (var i = 0; i < listCard.length; i++) {
@@ -58,7 +163,7 @@ function showListWord() {
                     "</div>" + listWord;
         }
     }
-    wordZone.innerHTML =listWord;
+    wordZone.innerHTML = listWord;
 }
 function addToAlbum() {
     var myselect = document.getElementById("avc-dropdown");
@@ -76,35 +181,72 @@ function showPopUp() {
         saveToAlbum(newAlbum, 'newAlbum');
     }
 }
-//new Album
-function ajaxRequest() {
-    var xmlhttp;
-    var name = document.getElementById("key_word").value;
-    if (name !== "") {
-        document.getElementById("result-content").style.display = 'inline-block';
-        document.getElementById("result").style.display = 'block';
-        document.getElementById("result").innerHTML = 'Loading...';
-        xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
-            {
+function startLearnMode() {
+    var listWord = document.getElementsByClassName('effect-click');
+    var ctrl = document.getElementsByClassName('controller');
+    ctrl[0].style.display = 'block';
+    index = 0;
+    listWord[0].style.display = 'block';
+    registerClickEvent();
+}
+function startTestMode() {
+    listObject = [];
+    testIndex = 0;
+    score = 0;
+    var listWord = document.getElementsByClassName('card-text');
+    var listMeaning = document.getElementsByClassName('my-definition');
+    for (var i = 0; i < listWord.length; i++) {
+        listObject.push({key: listWord[i].innerText,
+            meaning: listMeaning[i].innerText,
+            right: "true",
+            input: ""})
+    }
+    startQuiz();
+}
+function startQuiz() {
+    document.getElementById('test-input').focus();
+    var key = document.getElementById("test-card");
+    key.innerHTML = listObject[testIndex].meaning;
+}
+function showResult() {
+    var process = document.getElementById("test-process");
+    var result = document.getElementById("test-result");
+    var des = document.getElementById("test-des");
 
-                document.getElementById("result").innerHTML = xmlhttp.responseText;
-                document.getElementById("button-save").style.display = 'block';
-                document.getElementById("message").style.display = 'none';
-                if ("Not Found." !== xmlhttp.responseText) {
-                    viewDropdown();
-                }
-            }
-        };
-        xmlhttp.open("GET", "/avocado/CreateWord?word=" + name, true);
-        xmlhttp.send();
+    var result_list = document.getElementById("test-result-list");
+    process.style.display = 'none';
+    result.style.display = 'block';
+    var data = ""
+    for (var i = 0; i < listObject.length; i++) {
+        if (listObject[i].input != "") {
+            data = "<tr><td>" + listObject[i].meaning + "</td><td>" + listObject[i].input + "</td><td>" + listObject[i].key + "</td></tr>"
+                    + data;
+        }
+    }
+    if (data === "") {
+        data = "Well done!"
     }
     else {
-        alert('dont troll me!');
+        data = "<table><tr><th>Meaning</th><th>Wrong</th><th>Correct</th></tr>" + data + "</table>"
     }
+    result_list.innerHTML = data + "<br/> You got: " + score + "/" + listObject.length;
+    des.innerHTML = "Press x button to exit the quiz"
 }
-
+function closeModal() {
+    document.getElementById("test-modal").style.visibility = 'hidden';
+}
+function viewAlbums() {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
+        {
+            document.getElementById("list-album").innerHTML = xmlhttp.responseText;
+            getListWord(document.getElementsByClassName('avc-word-key')[0].innerText)
+        }
+    };
+    xmlhttp.open("GET", "/avocado/ViewAlbums", true);
+    xmlhttp.send();
+}
 function saveToAlbum(albumName, status) {
     var xmlhttp;
     var name = document.getElementById("my-name").innerHTML;
@@ -118,8 +260,6 @@ function saveToAlbum(albumName, status) {
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
             {
-//                alert("success");
-//                viewWordsPerAblbum();
                 document.getElementById("button-save").style.display = 'none';
                 document.getElementById("message").innerHTML = xmlhttp.responseText;
                 document.getElementById("message").style.display = 'block';
@@ -127,7 +267,7 @@ function saveToAlbum(albumName, status) {
         };
         xmlhttp.open("POST", "/avocado/SaveToAlbum", true);
         xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        if (status == undefined) {
+        if (status === undefined) {
             xmlhttp.send("type=" + type
                     + "&definition=" + definition
                     + "&name=" + name
@@ -152,12 +292,11 @@ function saveToAlbum(albumName, status) {
         alert('Please input your word!');
     }
 }
-
 function getListWord(id) {
     var activeAlbum = document.getElementById(id).parentElement;
-    var albumItems = document.getElementsByClassName("avc-album-item");
-    for (var i = 0; i < albumItems.length; i++) {
-        albumItems[i].setAttribute("class", "avc-album-item");
+    var listAlbums = document.getElementsByClassName("avc-album-item");
+    for (var i = 0; i < listAlbums.length; i++) {
+        listAlbums[i].setAttribute("class", "avc-album-item");
     }
     activeAlbum.setAttribute("class", "avc-album-item album-active");
     var xmlhttp = new XMLHttpRequest();
@@ -173,27 +312,34 @@ function getListWord(id) {
     xmlhttp.open("GET", "/avocado/ViewAlbum?album=" + id, true);
     xmlhttp.send();
 }
-
-function startLearnMode() {
-    var listWord = document.getElementsByClassName('effect-click');
-    var ctrl = document.getElementsByClassName('controller');
-    ctrl[0].style.display = 'block';
-    index = 0;
-    listWord[0].style.display = 'block';
-    registerClickEvent();
+function publishAlbum() {
+    var albumName = document.getElementsByClassName('album-active')[0].innerText.trim()
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "/avocado/PublishAlbum", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send("album=" + albumName);
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            viewAlbums();
+        }
+    }
 }
-function viewAlbums() {
+//PDF
+function exportPDF() {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
         {
+            alert("success");
             document.getElementById("list-album").innerHTML = xmlhttp.responseText;
-
         }
     };
-    xmlhttp.open("GET", "/avocado/ViewAlbums", true);
+    xmlhttp.open("GET", "/avocado/PDFExport", true);
     xmlhttp.send();
 }
+
+
+
 function viewLibrary() {
     xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
@@ -205,55 +351,8 @@ function viewLibrary() {
     xmlhttp.open("GET", "/avocado/ViewLibrary", true);
     xmlhttp.send();
 }
-function searchLibrary() {
-    var keyword = document.getElementById("search-library").value;
-    if (keyword !== "") {
-        xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
-            {
-                document.getElementById("public-album").innerHTML = xmlhttp.responseText;
-            }
-        };
-        xmlhttp.open("GET", "/avocado/ViewLibrary?keyword=" + keyword, true);
-        xmlhttp.send();
-    } else {
-        alert('Empty text!')
-    }
 
-}
-function viewDropdown() {
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState === 4 && xmlhttp.status === 200)
-        {
-            document.getElementById("avc-add-button").innerHTML = xmlhttp.responseText;
-        }
-    };
-    xmlhttp.open("GET", "/avocado/ViewAlbums?mode=dropdown", true);
-    xmlhttp.send();
-}
-function toggleImage(itemId) {
-
-    var keys = document.getElementsByClassName('avc-word-key');
-    for (i = 0; i < keys.length; i++) {
-        keys[i].setAttribute("class", "avc-word-key");
-    }
-    this.event.target.setAttribute("class", "avc-word-key word-active");
-
-    var items = document.getElementsByClassName('item');
-
-    for (i = 0; i < items.length; i++) {
-        if (items[i].id === itemId) {
-            items[i].style.display = 'block';
-        }
-        else {
-            items[i].style.display = 'none';
-        }
-    }
-}
-
-//home
+//HOME
 function toggleContent() {
     var sideBar = document.getElementsByClassName('avc-span');
     var myAlbum = document.getElementById('my-album');
@@ -278,12 +377,15 @@ function toggleContent() {
                 fade(myAlbum);
                 fade(library);
                 viewDropdown();
+                document.getElementById('key_word').focus();
+
             }
             if (this.id === "library-id") {
                 viewLibrary();
                 unfade(library);
                 fade(myAlbum);
                 fade(newAlbum);
+                document.getElementById('search-library').focus();
             }
             if (this.id === "my-album-id") {
                 unfade(myAlbum);
@@ -295,6 +397,8 @@ function toggleContent() {
         };
     }
 }
+
+//ANIMATION
 
 function fade(element) {
     var op = 1;  // initial opacity
@@ -308,7 +412,6 @@ function fade(element) {
         op -= op * 0.1;
     }, 10);
 }
-
 function unfade(element) {
     var op = 0.1;  // initial opacity
     element.style.display = 'block';
@@ -321,6 +424,7 @@ function unfade(element) {
         op += op * 0.1;
     }, 10);
 }
+
 function next() {
     var listWord = document.getElementsByClassName('effect-click');
     if (index < listWord.length - 1) {
@@ -343,12 +447,12 @@ function previous() {
 
     }
 }
-
 function upSideDown() {
     var listWord = document.getElementsByClassName('effect-click');
     var c = listWord[index].classList;
     c.contains("flipped") === true ? c.remove("flipped") : c.add("flipped");
 }
+
 function registerClickEvent() {
     var cards = document.getElementsByClassName("effect-click");
     for (var i = 0, len = cards.length; i < len; i++) {
@@ -356,15 +460,13 @@ function registerClickEvent() {
         clickListener(card);
     }
 }
-function returnFront(card) {
-
-}
 function clickListener(card) {
     card.addEventListener("keydown", function () {
         var c = this.classList;
         c.contains("flipped") === true ? c.remove("flipped") : c.add("flipped");
     });
 }
+//
 function switchMode(mode) {
     var custom = document.getElementById('custom-content');
     var auto = document.getElementById('auto-content');
@@ -380,5 +482,6 @@ function switchMode(mode) {
         document.getElementById('auto').setAttribute('class', 'active');
     }
 }
+
 
     

@@ -13,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.jsoup.nodes.Document;
 
 /**
@@ -46,30 +47,42 @@ public class CreateWord extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String word = request.getParameter("word");
-        //Parse website url
-        ParseHelper parser = new ParseHelper();
-        String data;
-        Document result = parser.getHtmlFromUrl(url + word);
-        if (result != null) {
-            Word newWord = parser.getMeaning(result, word);
-            data = "<div id='my-name'>" + newWord.getName() + "</div>"
-                    + "<div id='my-type'>" + newWord.getType() + "</div>"
-                    + "<div id='my-pronun'>" + newWord.getPronun() + "</div>"
-                    +"<hr/><div class='info'>Meaning</div>"
-                    + "<div id='my-definition'>" + newWord.getDefinition() + "</div>"
-                    +"<hr/><div class='info'>Example</div>"
-                    +"<div id='my-example'>" + newWord.getExamples() + "</div>"
-                    +"<hr/><div class='info'>Origin</div>"
-                    +"<div id='my-origin'>" + newWord.getOrigin() + "</div>";
-            
+        HttpSession session = request.getSession();
+        if ( session.getAttribute("_id")!=null) {
+             
+            String word = request.getParameter("word");
+            if (word.trim() != "") {
+                //Parse website url
+                ParseHelper parser = new ParseHelper();
+                String data;
+                Document result = parser.getHtmlFromUrl(url + word);
+                if (result != null) {
+                    Word newWord = parser.getMeaning(result, word);
+                    if (newWord != null) {
+                        data = "<div id='my-name'>" + newWord.getName() + "</div>"
+                                + "<div id='my-type'>" + newWord.getType() + "</div>"
+                                + "<div id='my-pronun'>" + newWord.getPronun() + "</div>"
+                                + "<hr/><div class='info'>Meaning</div>"
+                                + "<div id='my-definition'>" + newWord.getDefinition() + "</div>"
+                                + "<hr/><div class='info'>Example</div>"
+                                + "<div id='my-example'>" + newWord.getExamples() + "</div>"
+                                + "<hr/><div class='info'>Origin</div>"
+                                + "<div id='my-origin'>" + newWord.getOrigin() + "</div>";
+                    } else {
+                        data = "Not Found.";
+                    }
+                } else {
+                    data = "Not Found.";
+                }
+                //get meaning from result
+                response.setContentType("text/plain");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write(data);
+
+            }
         } else {
-            data = "Not Found.";
+            response.sendRedirect("/avocado/login.jsp");
         }
-        //get meaning from result
-        response.setContentType("text/plain");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(data);
     }
 
     /**
